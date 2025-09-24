@@ -1,7 +1,19 @@
-# CDSWerx Ecosystem - Monorepo
+# CDSWerx Ecosystem - Monorepo Hub
 
 **Implementation Date:** September 24, 2025  
 **Architecture:** Hybrid WordPress Development + Git Version Control  
+
+## Repository Architecture
+
+| Repository | Purpose | GitHub URL |
+|------------|---------|------------|
+| **cdswerx-ecosystem** | Monorepo Hub | `uxdevcds/cdswerx-ecosystem` |
+| **cdswerx-plugin** | Individual Component | `uxdevcds/cdswerx-plugin` |
+| **cdswerx-theme** | Individual Component | `uxdevcds/cdswerx-theme` |
+| **cdswerx-theme-child** | Individual Component | `uxdevcds/cdswerx-theme-child` |
+| **cdswerx-dev-environment** | WordPress Testing | `uxdevcds/cdswerx-dev-environment` |
+
+This hybrid approach provides unified development while maintaining compatibility with WordPress.org submissions, Composer packages, and existing integrations.
 
 ## 🏗️ Repository Structure
 
@@ -19,20 +31,23 @@ cdswerx-ecosystem/
 
 ## 🔄 Development Workflow
 
-### Local WordPress Development
-- Live WordPress environment: `../wp-content/`
-- Real-time testing and debugging
-- Immediate visual feedback
+### Primary Development Environment
+- **Source of Truth**: `packages/` directories in this ecosystem repository
+- **Live Testing**: WordPress environment at `../wp-content/` for real-time testing
+- **File Watchers**: Automatic sync from ecosystem to WordPress during development
+- **Immediate Feedback**: Changes visible instantly in WordPress admin and frontend
 
-### Version Control
-- Source of truth: `packages/` directories in this repo
-- Git tracking for proper version history
-- Component releases via subtree distribution
+### Version Control Strategy
+- **Git Repository**: This ecosystem repo tracks all component changes
+- **Commit Process**: Work directly in `packages/`, commit to ecosystem repo
+- **Component Releases**: Individual GitHub releases via git subtree automation
+- **Documentation**: Unified in `docs/` with component-specific organization
 
-### Sync Strategy
-- **Ecosystem → WordPress**: Automated file watchers
-- **WordPress → Ecosystem**: Manual sync commands
-- **Bidirectional**: Conflict detection and resolution
+### Bidirectional Sync System
+- **Ecosystem → WordPress**: Real-time sync via file watchers (`npm run watch`)
+- **WordPress → Ecosystem**: Manual sync for admin-made changes (`npm run sync:from-wp`)
+- **Conflict Detection**: Automated validation before sync operations
+- **Safety Features**: Backup creation and rollback capabilities
 
 ## 🚀 Component Distribution
 
