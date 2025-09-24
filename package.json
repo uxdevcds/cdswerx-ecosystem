@@ -1,0 +1,32 @@
+{
+  "name": "cdswerx-ecosystem",
+  "version": "1.0.0",  
+  "description": "CDSWerx WordPress Ecosystem - Hybrid Development Environment",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "watch": "node tools/watch-and-sync.js",
+    "sync:from-wp": "node tools/wp-to-ecosystem.js", 
+    "sync:to-wp": "node tools/ecosystem-to-wp.js",
+    "release:plugin": "git subtree push --prefix=packages/cdswerx-plugin plugin-origin main",
+    "release:theme": "git subtree push --prefix=packages/cdswerx-theme theme-origin main",
+    "release:child-theme": "git subtree push --prefix=packages/cdswerx-theme-child child-theme-origin main",
+    "test:ecosystem": "node tools/ecosystem-validator.js",
+    "backup:wp": "node tools/backup-wordpress.js",
+    "clean:backups": "find . -name '*BACKUP*' -type d -exec rm -rf {} +",
+    "init:repos": "node tools/init-component-repos.js"
+  },
+  "devDependencies": {
+    "chokidar": "^3.5.3",
+    "fs-extra": "^11.1.1",
+    "chalk": "^4.1.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/cdswerx-ecosystem.git"
+  },
+  "author": "CDSWerx",
+  "license": "MIT"
+}

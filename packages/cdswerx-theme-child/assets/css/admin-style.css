@@ -1,0 +1,32 @@
+/*//////////////////////////////////////////////////////////////*/
+/*/////////////////// CUSTOM CSS BACKEND ///////////////////////*/
+/*//////////////////////////////////////////////////////////////*/
+/*//////////////////////////////////////////////////////////////*/
+
+/*******************************************************/
+/* Fix SVG replaced images
+/*******************************************************/
+
+/*Fixes logo in theme settings panel*/
+@media only screen and (min-width:690px) {
+	#redux-header img, #redux-header svg
+	{
+  width: 36px;
+  height: auto;
+  padding-left: 5px;
+}
+}
+/*fixes logo in admin left panel*/
+#adminmenu div.wp-menu-image .replaced-svg {
+width: 24px;
+height: auto;
+float: left;
+margin: 5px 0px 0px 5px;
+text-align: center;
+}
+
+/*fixes svg icons that appear in media*/
+.media-icon svg {
+  width: 62px;
+  text-align: center;
+}

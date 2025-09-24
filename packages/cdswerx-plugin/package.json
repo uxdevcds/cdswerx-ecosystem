@@ -1,0 +1,51 @@
+{
+  "name": "cdswerx-plugin",
+  "version": "1.0.3",
+  "description": "A powerful WordPress plugin that provides advanced custom code management, professional Monaco Editor integration, and seamless theme ecosystem support.",
+  "main": "cdswerx.php",
+  "scripts": {
+    "build": "webpack --mode=production",
+    "dev": "webpack --mode=development --watch",
+    "lint:js": "eslint admin/js public/js --ext .js",
+    "lint:css": "stylelint admin/css/**/*.css public/css/**/*.css",
+    "format": "prettier --write admin/js/**/*.js public/js/**/*.js",
+    "test": "jest",
+    "zip": "npm run build && zip -r cdswerx-plugin.zip . -x node_modules/\\* .git/\\* .gitignore package-lock.json webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cdswerx/cdswerx-plugin.git"
+  },
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "custom-code",
+    "monaco-editor",
+    "elementor",
+    "css",
+    "javascript"
+  ],
+  "author": "CDSWerx Team <dev@cdswerx.com>",
+  "license": "GPL-2.0-or-later",
+  "bugs": {
+    "url": "https://github.com/cdswerx/cdswerx-plugin/issues"
+  },
+  "homepage": "https://cdswerx.com",
+  "devDependencies": {
+    "@babel/core": "^7.22.0",
+    "@babel/preset-env": "^7.22.0",
+    "babel-loader": "^9.1.0",
+    "css-loader": "^6.8.0",
+    "eslint": "^8.42.0",
+    "jest": "^29.5.0",
+    "mini-css-extract-plugin": "^2.7.0",
+    "prettier": "^2.8.0",
+    "stylelint": "^15.6.0",
+    "webpack": "^5.87.0",
+    "webpack-cli": "^5.1.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}

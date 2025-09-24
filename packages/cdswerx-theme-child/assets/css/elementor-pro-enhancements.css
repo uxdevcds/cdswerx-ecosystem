@@ -1,0 +1,308 @@
+/**
+ * CDSWerx Elementor Pro Enhancements
+ * 
+ * Advanced styling for Elementor Pro features including
+ * Theme Builder, Dynamic Content, and Pro widgets.
+ * 
+ * @since TE-5
+ */
+
+/* ==========================================================================
+   Elementor Pro Theme Builder Enhancements
+   ========================================================================== */
+
+/* Header template optimizations */
+.elementor-location-header {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer template optimizations */
+.elementor-location-footer {
+    margin-top: auto;
+}
+
+/* Single post template enhancements */
+.elementor-location-single {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Archive template optimizations */
+.elementor-location-archive {
+    display: grid;
+    gap: 2rem;
+}
+
+/* ==========================================================================
+   Dynamic Content Styling
+   ========================================================================== */
+
+/* Post title enhancements */
+.elementor-widget-post-title h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+/* Post meta styling */
+.elementor-widget-post-info {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.elementor-widget-post-info .elementor-post-info__item {
+    margin-right: 1rem;
+}
+
+/* Post excerpt enhancements */
+.elementor-widget-post-excerpt {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+/* Featured image optimizations */
+.elementor-widget-post-featured-image {
+    margin-bottom: 2rem;
+}
+
+.elementor-widget-post-featured-image img {
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+   Pro Widget Enhancements
+   ========================================================================== */
+
+/* Posts widget styling */
+.elementor-widget-posts .elementor-post {
+    border: 1px solid #eee;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.elementor-widget-posts .elementor-post:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Portfolio widget (if available) */
+.elementor-widget-portfolio {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+/* Testimonial widget enhancements */
+.elementor-widget-testimonial {
+    text-align: center;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    position: relative;
+}
+
+.elementor-widget-testimonial::before {
+    content: '"';
+    font-size: 4rem;
+    color: #ddd;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-family: Georgia, serif;
+}
+
+/* ==========================================================================
+   Form Builder Enhancements
+   ========================================================================== */
+
+.elementor-widget-form {
+    max-width: 600px;
+}
+
+.elementor-widget-form .elementor-field-group {
+    margin-bottom: 1.5rem;
+}
+
+.elementor-widget-form .elementor-field {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.elementor-widget-form .elementor-field:focus {
+    border-color: #0073aa;
+    box-shadow: 0 0 0 3px rgba(0, 115, 170, 0.1);
+    outline: none;
+}
+
+.elementor-widget-form .elementor-button {
+    background: linear-gradient(135deg, #0073aa 0%, #005177 100%);
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.elementor-widget-form .elementor-button:hover {
+    background: linear-gradient(135deg, #005177 0%, #0073aa 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 115, 170, 0.3);
+}
+
+/* ==========================================================================
+   WooCommerce Pro Integration
+   ========================================================================== */
+
+/* Product widgets */
+.elementor-widget-woocommerce-product-title h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.elementor-widget-woocommerce-product-price {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #27ae60;
+    margin-bottom: 1rem;
+}
+
+.elementor-widget-woocommerce-product-add-to-cart .button {
+    background: #27ae60;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.elementor-widget-woocommerce-product-add-to-cart .button:hover {
+    background: #219a52;
+}
+
+/* ==========================================================================
+   Popup Builder Enhancements
+   ========================================================================== */
+
+.elementor-popup-modal {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.elementor-popup-modal .dialog-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.elementor-popup-modal .dialog-message {
+    padding: 2rem;
+}
+
+/* ==========================================================================
+   Advanced Navigation Enhancements
+   ========================================================================== */
+
+.elementor-nav-menu--dropdown-tablet,
+.elementor-nav-menu--dropdown-mobile {
+    background: white;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.elementor-nav-menu--dropdown .elementor-nav-menu__item a {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f5f5f5;
+    transition: background 0.3s ease;
+}
+
+.elementor-nav-menu--dropdown .elementor-nav-menu__item a:hover {
+    background: #f8f9fa;
+}
+
+/* ==========================================================================
+   Mobile Responsiveness for Pro Features
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .elementor-location-header {
+        position: relative;
+    }
+    
+    .elementor-widget-post-title h1 {
+        font-size: 1.8rem;
+    }
+    
+    .elementor-widget-posts {
+        grid-template-columns: 1fr;
+    }
+    
+    .elementor-popup-modal {
+        margin: 1rem;
+        max-height: calc(100vh - 2rem);
+    }
+}
+
+/* ==========================================================================
+   Performance Optimizations for Pro
+   ========================================================================== */
+
+/* Optimize animations */
+.elementor-widget[data-widget_type*="animated"] {
+    will-change: transform, opacity;
+}
+
+/* Lazy loading helpers */
+.elementor-invisible {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.elementor-invisible.elementor-visible {
+    opacity: 1;
+}
+
+/* ==========================================================================
+   CDSWerx Pro Integration Utilities
+   ========================================================================== */
+
+.cdswerx-pro-enhanced {
+    position: relative;
+}
+
+.cdswerx-pro-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: linear-gradient(45deg, #ff6b6b, #ee5a6f);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 10;
+}
+
+.cdswerx-dynamic-content {
+    border-left: 4px solid #0073aa;
+    padding-left: 1rem;
+    margin-left: 1rem;
+}

@@ -1,0 +1,663 @@
+/*/////////////////////////////////////////////////////*/
+/*/////////////////// CUSTOM CSS //////////////////////*/
+/* Below are css styles for general site        */
+/*/////////////////////////////////////////////////////*/
+.mask.my-shape{
+    mask: url('http://localhost:10044/wp-content/plugins/cdswerx-addon-elementor/assets/images/cds-mask-circles.svg');
+}
+/*******************************************************/
+/* Global Styles Typography Alt Background
+/*******************************************************/
+html {
+  font-size: 62.5%;
+}
+
+/*p{margin-bottom:1em}*/
+
+/*Elements on Dark or Color BG*/
+.lite h1,
+.lite h2,
+.lite h3,
+.lite h4,
+.lite h5,
+.lite h6,
+.lite p,
+.lite ul li,
+.lite ol li,
+.lite p a,
+.lite a,
+.lite .qodef-m-text,
+.lite .qodef-m-title,
+.lite .jet-listing-dynamic-link__link,
+.lite .jet-listing-grid.jet-listing,
+.lite .jet-listing-dynamic-field__content,
+.lite .jet-listing-notice,
+.lite svg,
+.listing-card .lite {
+  color: #fff !important;
+}
+
+.lite p a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.lite .elementor-element.listing-card.e-con,
+.lite .elementor-element.listing-card.e-con:hover {
+  border-color: #fff;
+}
+
+.lite .jet-listing-not-found,
+.jet-listing-not-found {
+  text-align: left !important;
+}
+
+
+/*Background Gradient*/
+.btn-gradient .elementor-icon,
+.btn-gradient .qodef-m-icon-wrapper .qodef-m-icon-holder,
+.btn-gradient .qodef-m.qodef-qi-button,
+.forminator-ui .forminator-button-submit {
+  background: linear-gradient(135deg, #7FB8F5 47%, #309DF0 100%);
+}
+
+   /*SEO H1 Heading & Paragraph Formatting*/
+  p:has(+ h1.hero-header), h1.hero-header, h1.hero-header + p,
+  p:has(+ h2.hero-header), h2.hero-header, h2.hero-header + p,
+  p:has(+ h3.hero-header), h3.hero-header, h3.hero-header + p,
+  p:has(+ h4.hero-header), h4.hero-header, h4.hero-header + p{
+    display:inline; /*forces h1 tag to display in same line as paragraph*/
+  }
+
+  h1.hero-header,
+  h2.hero-header,
+  h3.hero-header,
+  h4.hero-header{ /*ensures h1 style takes same as paragraph*/
+  font-size:inherit !important;
+  font-weight:inherit !important;
+  line-height:inherit !important;
+  letter-spacing:inherit !important;
+  color:inherit !important;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+
+/*******************************************************/
+/*Header Navigation */
+/*******************************************************/
+
+@media only screen and (min-width : 768px) and (max-width : 1425px) {
+
+  /*- adjust to scale & prevent wrapping before specific breakpoint*/
+  .main-nav .jet-mega-menu .jet-mega-menu-list {
+    flex-wrap: nowrap !important;
+  }
+
+  .main-nav .full-width .jet-mega-menu-mega-container {
+    --max-width: 1140px;
+    width: calc((var(--max-width)* 0.75));
+
+  }
+
+  .main-nav .jet-mega-menu .jet-mega-menu-list .jet-mega-menu-item__link.jet-mega-menu-item__link--top-level,
+  .main-nav .secondary-nav .elementor-icon-list-item>a {
+    font-size: 95% !important;
+  }
+
+  header.sticky-header .logo svg {
+    width: 95% !important;
+  }
+
+}
+
+/*Mega Menu Fixes on responsive screens*/
+@media only screen and (min-width : 1px) and (max-width : 1024px) {
+
+  .main-nav .jet-mega-menu.jet-mega-menu--layout-dropdown .jet-mega-menu-toggle-icon svg,
+  .jet-mobile-menu .jet-mobile-menu__toggle .jet-mobile-menu__toggle-icon svg,
+  .jet-mobile-menu .jet-dropdown-arrow svg,
+  .jet-mobile-menu .jet-mobile-menu__back svg {
+    height: 1em;
+  }
+
+  .jet-mobile-menu .jet-mobile-menu__back svg {
+    fill: #fff !important;
+    color: #fff !important;
+  }
+
+  /*.jet-mobile-menu .jet-listing-dynamic-field__content,
+  .jet-mobile-menu .qodef-qi-section-title .qodef-m-title,
+  .jet-mobile-menu h2.qodef-m-title,
+  .jet-mobile-menu .qodef-m-subtext,
+    .jet-mobile-menu .qodef-m-text{
+    color: #fff !important;
+  }*/
+}
+
+/*******************************************************/
+/*Sticky Nav Header*/
+/*******************************************************/
+/* class: .sticky-header */
+header.sticky-header,
+header .sticky-header.jet-sticky-section.primary.sticky-header {
+  --header-height: 100px;
+  --shrink-header-to: 0.6;
+  --transition: .45s cubic-bezier(.4, 0, .2, 1);
+  background-color: rgba(255, 255, 255, 0);
+  transition: background-color var(--transition), backdrop-filter var(--transition), box-shadow var(--transition);
+  z-index: 9999;
+}
+
+/***
+* Sticky header activated 
+*/
+
+header .sticky-header.jet-sticky-section.primary.sticky-header.jet-sticky-section--stuck {
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0px 4px 33px 1px rgba(0, 0, 0, .07);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+header.sticky-header.elementor-sticky--effects .elementor-nav-menu .menu-item a,
+header.sticky-header.elementor-sticky--effects .jet-nav .menu-item a,
+header .sticky-header.jet-sticky-section.primary.sticky-header .jet-nav .menu-item-link {
+  color: var(--e-global-color-3365836) !important;
+}
+
+header .sticky-header.jet-sticky-section.primary.sticky-header.jet-sticky-section--stuck .jet-nav .elementor-nav-menu.current-menu-item a,
+header .sticky-header.jet-sticky-section.primary.sticky-header.jet-sticky-section--stuck .menu-item-link.menu-item-link-top,
+header.sticky-header.elementor-sticky--effects .jet-nav .menu-item a:hover,
+header.sticky-header.elementor-sticky--effects .jet-nav .elementor-nav-menu.current-menu-item a,
+header.sticky-header.elementor-sticky--effects .jet-nav .menu-item.current-menu-item a {
+  color: var(--e-global-color-text) !important;
+}
+
+header .sticky-header.jet-sticky-section.primary.sticky-header.jet-sticky-section--stuck .jet-nav .elementor-nav-menu.current-menu-item a,
+header .sticky-header.jet-sticky-section.primary.sticky-header .jet-nav .menu-item a:hover,
+header.sticky-header.elementor-sticky--effects .elementor-nav-menu .menu-item a:hover,
+header.sticky-header.elementor-sticky--effects .elementor-nav-menu .sub-menu .menu-item a,
+header.sticky-header.elementor-sticky--effects .jet-nav .sub-menu .menu-item a {
+  color: var(--e-global-color-primary) !important;
+}
+
+header.sticky-header.elementor-sticky--effects .elementor-nav-menu .sub-menu .menu-item a:hover header.sticky-header.elementor-sticky--effects .jet-nav .sub-menu .menu-item a:hover {
+  color: var(--e-global-color-secondary) !important;
+}
+
+header.sticky-header>.e-con-inner {
+  min-height: var(--header-height);
+  transition: min-height var(--transition);
+}
+
+header.sticky-header.elementor-sticky--effects>.e-con-inner,
+header.sticky-header.elementor-sticky--effects>.e-con-inner>.jet-mega-menu-mega-container {
+  min-height: calc(var(--header-height) * var(--shrink-header-to));
+}
+
+/***
+* Shorter header on mobile (70px instead of 100px)
+*/
+@media only screen and (max-width: 767px) {
+  header.sticky-header {
+    --header-height: 70px;
+  }
+}
+
+
+/***
+/* class: .logo
+*/
+header .sticky-header.jet-sticky-section.primary.sticky-header .sticky-active-logo svg,
+header .sticky-header.jet-sticky-section.primary.sticky-header.jet-sticky-section--stuck .logo svg,
+header.sticky-header .sticky-active-logo svg,
+header.sticky-header.elementor-sticky--effects .logo svg {
+  transition: transform var(--transition);
+  z-index: -999 !important;
+  opacity: 0;
+}
+
+
+header .sticky-header.jet-sticky-section.primary.sticky-header .logo svg,
+header .sticky-header.jet-sticky-section.primary.sticky-header.jet-sticky-section--stuck .sticky-active-logo svg,
+header.sticky-header.elementor-sticky--effects .sticky-active-logo svg {
+  z-index: 999 !important;
+  opacity: 1;
+}
+
+header .sticky-header.jet-sticky-section.primary.sticky-header .logo svg,
+header .sticky-header.jet-sticky-section.primary.sticky-header.jet-sticky-section--stuck .sticky-active-logo svg,
+header.sticky-header.elementor-sticky--effects .logo svg,
+header.sticky-header.elementor-sticky--effects .sticky-active-logo svg {
+  transform: scale(.8);
+}
+
+header .sticky-header.jet-sticky-section.primary.sticky-header.jet-sticky-section--stuck .sticky-active-logo svg,
+header.sticky-header.elementor-sticky--effects .sticky-active-logo svg {
+  display: block;
+  /*show when sticky header active*/
+}
+
+/*********************************************************************
+/*Fix Sticky Header Overlaps Anchor in Elementor for Services Pages*/
+/*********************************************************************/
+body:not(.elementor-editor-active) .elementor-widget-menu-anchor {
+  position: relative;
+  z-index: -1;
+}
+
+body:not(.elementor-editor-active) .elementor-menu-anchor:before {
+  content: "";
+  display: block;
+  height: 200px;
+  /* fixed header height*/
+  margin: -200px 0 0;
+  /* negative fixed header height*/
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/*******************************************************/
+/*Misc Custom Styles*/
+/*******************************************************/
+
+/*adjust letter spacing of h3 sized text*/
+h3.elementor-icon-box-title,
+/*icon boxes*/
+h3.jet-toggle__label-text,
+/*FAQs*/
+.blog-title h3.jet-listing.jet-listing-dynamic-link
+
+/*blog listing*/
+  {
+  letter-spacing: -0.5px;
+}
+
+/*format color of contact labels*/
+.jet-listing-dynamic-link__label>strong,
+.mail-link .elementor-icon-list-text>strong,
+.mail-link>strong {
+  color: var(--e-global-color-primary);
+}
+
+/*******************************************************/
+/*SVG - adjust size for GUI class icons*/
+/*******************************************************/
+.gui .jet-inline-svg svg {
+  min-width: 6px;
+  min-height: 16px;
+}
+
+
+/*******************************************************/
+/* Blog Gallery & Article Formatting*/
+/*******************************************************/
+/*Format TOC*/
+.post-toc.elementor-widget-n-accordion .e-n-accordion-item-title-icon span.e-opened {
+  max-width: 16px;
+  /*force max size of icon toggle*/
+}
+
+/*adjust TOC containers padding*/
+.post-toc.elementor-widget-n-accordion .e-n-accordion-item[open]>.e-n-accordion-item-title {
+  z-index: 1;
+  position: relative;
+}
+
+.post-toc.elementor-widget-n-accordion .e-n-accordion-item .elementor-element.e-con-full.e-child {
+  margin-top: -1.5em;
+  padding-top: 1.5em;
+}
+
+.qodef-qi-table-of-contents
+/* -- Nested List  -- */
+
+/* Set the first layer of list items to regular numeric decimals 
+.qodef-m-table-content ol {
+    list-style-type: decimal;
+}*/
+
+/* Set the second layer of list items to lowercase alphabetic 
+.qodef-m-table-content ol > li > ol{
+    list-style-type: lower-alpha;
+}*/
+
+/* Set the third layer of list items to lowercase Roman numerals 
+.qodef-m-table-content ol > li > ol > li > ol	{
+    list-style-type: lower-roman;
+}*/
+
+
+.qodef-qi-table-of-contents.qodef-list-position--inside .qodef-m-table-content>ul,
+.qodef-qi-table-of-contents.qodef-list-position--outside .qodef-m-table-content>ul,
+.qodef-qi-table-of-contents.qodef-list-position--inside .qodef-m-table-content>ol,
+.qodef-qi-table-of-contents.qodef-list-position--outside .qodef-m-table-content>ol {
+  font-weight: 600;
+}
+
+.qodef-qi-table-of-contents.qodef-list-position--outside ul,
+.qodef-qi-table-of-contents.qodef-list-position--outside ol {
+  padding-left: 2.25em;
+  padding-right: 2.25em;
+  /*reduce spacing for outside lists*/
+}
+
+.qodef-qi-table-of-contents.qodef-list-position--inside ol,
+.qodef-qi-table-of-contents.qodef-list-position--outside ol,
+.qodef-qi-table-of-contents.qodef-list-position--inside ul,
+.qodef-qi-table-of-contents.qodef-list-position--outside ul {
+  margin-top: 0px !important;
+  margin-bottom: 10px !important;
+
+}
+
+/*inner lists*/
+/*.qodef-qi-table-of-contents.qodef-list-position--inside ul li > ul:first-of-type {
+  margin-top: 10px !important;
+}*/
+
+/*inner lists*/
+.qodef-qi-table-of-contents.qodef-list-position--inside ul li>ul,
+.qodef-qi-table-of-contents.qodef-list-position--outside ul li>ul {
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+.qodef-qi-table-of-contents.qodef-list-position--inside ol li>ol li:first-child,
+.qodef-qi-table-of-contents.qodef-list-position--outside ol li>ol li:first-child {
+  padding-bottom: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+.qodef-qi-table-of-contents.qodef-list-position--inside ul li>ul li:last-child,
+.qodef-qi-table-of-contents.qodef-list-position--outside ul li>ul li:last-child,
+.qodef-qi-table-of-contents.qodef-list-position--inside ol li>ol li:last-child,
+.qodef-qi-table-of-contents.qodef-list-position--outside ol li>ol li:last-child {
+  margin-bottom: 15px !important;
+}
+
+
+/***********/
+/*Default color for bullet lists*/
+/***********/
+.single.single-post .main-content ul li {
+  color: var(--e-global-color-text);
+}
+
+.single.single-post .main-content ul li::marker {
+  color: var(--e-global-color-primary);
+}
+
+/***********/
+/* Add buffer space between images within post text*/
+/***********/
+.single.single-post .main-content p>img,
+.single.single-post .main-content p>blockquote {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  border-radius: 16px;
+}
+
+.single.single-post .main-content p>img:not(.post-featured-image) {
+  border-radius: 16px;
+}
+
+/****************************/
+/*Format Heading typography*/
+/***************************/
+
+.single.single-post .post-sidebar h3:not(.qodef-m-title, .listing-slider .elementor-heading-title),
+.single.single-post .main-content h3:not(.qodef-m-title, .listing-slider .elementor-heading-title),
+.single.single-post .main-content h2:not(.qodef-m-title, .listing-slider .elementor-heading-title),
+.single.single-post .post-sidebar h2:not(.qodef-m-title, .listing-slider .elementor-heading-title) {
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+.single.single-post .main-content h4,
+.single.single-post .main-content h3,
+.single.single-post .main-content h2,
+.single.single-post .main-content h1 {
+  line-height: 1.2em !important;
+}
+
+.single.single-post .main-content .elementor-post__title,
+.single.single-post .main-content .jet-posts h3.entry-title {
+  line-height: 1em !important;
+}
+
+.single.single-post .main-content .qodef-qi-post-content.qodef-e-content p {
+  margin-bottom: 1em;
+  /*adjust spacing of paragraphs*/
+}
+
+/****************/
+/*General Lists in articles*/
+/****************/
+
+/*adjust spacing of lists between paragraphs*/
+.single.single-post .main-content p:has(+ ul),
+.single.single-post .main-content p:has(+ ol),
+.single.single-post .main-content ol,
+.single.single-post .main-content ul {
+  margin-bottom: 0.5em;
+}
+
+
+.single.single-post .main-content .qodef-qi-post-content ul,
+.single.single-post .main-content .qodef-qi-post-content ol,
+.single.single-post .main-content .qodef-qi-post-content p+ol,
+.single.single-post .main-content .qodef-qi-post-content p+ol li>ol,
+.single.single-post .main-content .qodef-qi-post-content p+ul,
+.single.single-post .main-content .qodef-qi-post-content p+ul li>ul {
+  padding-left: 1.5em;
+  /*selects ul immediately after p*/
+}
+
+.single.single-post .main-content .qodef-qi-post-content ul,
+.single.single-post .post-sidebar h2,
+.single.single-post .post-sidebar h3,
+.single.single-post .post-sidebar h4 {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+.single.single-post .main-content h2 {
+  font-size: 3rem !important;
+  font-weight: 600;
+  color: var(--e-global-color-efbdf69);
+  letter-spacing: -1.5px;
+  text-transform: capitalize;
+}
+
+.single.single-post .post-sidebar h3,
+.single.single-post .main-content h3:not(.listing-slider .elementor-heading-title) {
+  font-size: 2.4rem !important;
+  font-weight: 600;
+  color: var(--e-global-color-text);
+  text-transform: capitalize;
+  letter-spacing: -1px;
+}
+
+.single.single-post .post-sidebar h4,
+.single.single-post .main-content h4:not(.listing-slider) {
+  font-size: 1.8rem !important;
+  font-weight: 500;
+  letter-spacing: -0.25px;
+  color: var(--e-global-color-primary);
+  padding-top: 10px;
+  font-style: italic;
+  /*  text-transform: uppercase;*/
+}
+
+
+.single.single-post .main-content p>a,
+.single.single-post .main-content ul li a,
+.single.single-post .main-content ol li a {
+  color: var(--e-global-color-efbdf69);
+  position: relative;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.single.single-post .main-content p>a:hover,
+.single.single-post .main-content ul li a:hover,
+.single.single-post .main-content ol li a:hover {
+  color: var(--e-global-color-primary);
+  position: relative;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/*format number list spacing FOR PAGES only*/
+.page-template-default.page ul.primary-bullet-list {
+  padding-left: 1.5em;
+}
+
+
+/*Format Sidebar*/
+.single.single-post .qodef-qi-post-content .jet-sticky-container-sticky,
+.blog-sidebar.jet-sticky-container-sticky {
+  z-index: -999;
+}
+
+/*******************************************************/
+/*Blog Footer Signature*/
+/*******************************************************/
+.blog-signature a {
+  font-weight: 700;
+}
+
+.blog-signature a:hover,
+.blog-signature h2 a:hover {
+  color: var(--e-global-color-ee6b38f) !important;
+}
+
+/*******************************************************/
+/* Forminator*/
+/*******************************************************/
+.home-cta .forminator-ui.forminator-design--flat .forminator-label {
+  color: #fff !important;
+}
+
+.home-cta .forminator-ui.forminator-design--flat .forminator-button-submit,
+.contact-cta .forminator-ui.forminator-design--flat .forminator-button-submit {
+  font-size: inherit !important;
+  font-weight: 600 !important;
+  border-radius: 100px !important;
+}
+
+.home-cta .forminator-ui.forminator-custom-form[data-design="flat"] .forminator-button,
+.contact-cta .forminator-ui.forminator-custom-form[data-design="flat"] .forminator-button {
+  padding: 13px 46px !important;
+}
+
+.home-cta .forminator-ui.forminator-custom-form:not(.forminator-size--small)[data-grid="open"] .forminator-row:not(:last-child),
+.contact-cta .forminator-ui.forminator-custom-form:not(.forminator-size--small)[data-grid="open"] .forminator-row:not(:last-child) {
+
+  margin-bottom: 15px !important;
+}
+
+.home-cta .forminator-input-with-icon label,
+.contact-cta .forminator-input-with-icon label {
+  display: block;
+}
+
+.home-cta .ui-datepicker.forminator-calendar--default .ui-datepicker-header .ui-corner-all,
+.home-cta .ui-datepicker.forminator-calendar--default .ui-datepicker-calendar tbody tr td a,
+.home-cta .forminator-ui.forminator-custom-form[data-design="default"] .forminator-button {
+  border-radius: 0px !important;
+}
+
+.home-cta .forminator-ui.forminator-custom-form[data-design="default"] .forminator-button,
+.contact-cta .forminator-ui.forminator-custom-form[data-design="default"] .forminator-button {
+  padding: 20px 40px;
+}
+
+.home-cta .forminator-ui#forminator-module-385.forminator-design--default .forminator-button-submit,
+.contact-cta .forminator-ui#forminator-module-385.forminator-design--default .forminator-button-submit {
+  font-size: inherit !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+}
+
+/****************/
+/*Rich Plugins Styling*/
+/****************/
+/*hide stars*/
+.rpi-header,
+.rpi-header .rpi-info .rpi-stars {
+  display: none;
+}
+
+/*Reviews Header – review us buttons*/
+.rpi-review_us:hover,
+.rpi-review_us:active {
+  background: rgb(192, 144, 36, 0.85) !important;
+}
+
+.rpi-review_us a,
+.rpi-review_us[onclick] {
+
+  font-size: 1.2rem !important;
+  font-weight: 600;
+}
+
+/*Reviews Cards*/
+/*margins to prevent shadow cutoff*/
+.rpi-slider .rpi-card {
+  padding-right: 15px;
+}
+
+.rpi-content .rpi-cards {
+  padding-bottom: 30px;
+  padding-left: 15px;
+  padding-right: 15px;
+  align-items: flex-start;
+}
+
+.post-sidebar .rpi-content .rpi-cards {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.rpi-content .rpi-card-inner {
+  padding: 2em;
+  box-shadow: rgba(0, 0, 0, 0.175) 10px 15px 25px -20px !important;
+  border-radius: 16px !important;
+  background-color: var(--e-global-color-84fc167) !important;
+}
+
+.rpi-card-inner.rpi-logo::before {
+  top: 2em !important;
+  right: 2em !important;
+}
+
+.post-sidebar .rpi-content .rpi-card-inner {
+  padding: 1.5em;
+  box-shadow: rgba(0, 0, 0, 0.175) 5px 10px 20px -20px !important
+}
+
+.post-sidebar .rpi-card-inner.rpi-logo::before {
+  top: 1.5em !important;
+  right: 1.5em !important;
+}
+
+
+.rpi .rpi-readmore {
+  color: var(--e-global-color-secondary);
+  padding-top: 10px;
+  font-weight: 500;
+  font-size: 1.4rem !important;
+}
+
+@media only screen and (min-width : 1px) and (max-width : 999px) {}
+
+.rpi-card .rpi-card-inner .rpi-logos {
+  display: none;
+}
+
+.rpi-content .rpi-card .rpi-card-inner,
+.rpi-text.rpi-scroll {
+  min-height: 150px;
+}

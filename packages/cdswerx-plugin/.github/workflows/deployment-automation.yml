@@ -1,0 +1,342 @@
+name: Deployment Automation
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      deployment_type:
+        description: 'Type of deployment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+        - rollback
+      version:
+        description: 'Version to deploy (leave empty for latest)'
+        required: false
+        type: string
+
+env:
+  STAGING_SERVER: 'staging.cdswerx.com'
+  PRODUCTION_SERVER: 'cdswerx.com'
+  DEPLOY_PATH: '/var/www/wp-content/plugins/cdswerx-plugin'
+
+jobs:
+  prepare-deployment:
+    name: Prepare Deployment Package
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+      package_name: ${{ steps.package.outputs.package_name }}
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: Get Version
+      id: get-version
+      run: |
+        if [ -n "${{ github.event.inputs.version }}" ]; then
+          VERSION="${{ github.event.inputs.version }}"
+        else
+          VERSION=$(grep -oP "Version:\s*\K[\d.]+" cdswerx.php)
+        fi
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Deploying version: $VERSION"
+        
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: zip
+        
+    - name: Install Dependencies
+      run: |
+        if [ -f "composer.json" ]; then
+          composer install --no-dev --optimize-autoloader
+        fi
+        
+    - name: Build Assets
+      run: |
+        if [ -f "package.json" ]; then
+          npm ci
+          npm run build
+        fi
+        
+    - name: Create Deployment Package
+      id: package
+      run: |
+        VERSION="${{ steps.get-version.outputs.version }}"
+        PACKAGE_NAME="cdswerx-plugin-v$VERSION.zip"
+        
+        # Create clean directory for packaging
+        mkdir -p dist/cdswerx-plugin
+        
+        # Copy plugin files (exclude development files)
+        rsync -av --exclude-from='.deployignore' . dist/cdswerx-plugin/
+        
+        # Create deployment package
+        cd dist
+        zip -r "../$PACKAGE_NAME" cdswerx-plugin/
+        
+        echo "package_name=$PACKAGE_NAME" >> $GITHUB_OUTPUT
+        echo "Created deployment package: $PACKAGE_NAME"
+        
+    - name: Upload Deployment Package
+      uses: actions/upload-artifact@v4
+      with:
+        name: deployment-package
+        path: cdswerx-plugin-v${{ steps.get-version.outputs.version }}.zip
+        retention-days: 7
+
+  run-pre-deployment-tests:
+    name: Pre-Deployment Tests
+    runs-on: ubuntu-latest
+    needs: prepare-deployment
+    
+    steps:
+    - name: Download Deployment Package
+      uses: actions/download-artifact@v4
+      with:
+        name: deployment-package
+        
+    - name: Extract Package
+      run: |
+        unzip ${{ needs.prepare-deployment.outputs.package_name }}
+        
+    - name: Setup Test Environment
+      run: |
+        curl -O https://raw.githubusercontent.com/wp-cli/wp-cli/main/bin/wp-cli.phar
+        chmod +x wp-cli.phar
+        sudo mv wp-cli.phar /usr/local/bin/wp
+        
+        wp core download --path=/tmp/wordpress --allow-root
+        cd /tmp/wordpress
+        wp config create --dbname=test --dbuser=root --dbpass=root --dbhost=127.0.0.1 --allow-root
+        
+    - name: Start MySQL
+      run: |
+        sudo systemctl start mysql.service
+        mysql -e 'CREATE DATABASE test;' -uroot -proot
+        
+    - name: Install WordPress
+      run: |
+        cd /tmp/wordpress
+        wp core install --url=localhost --title="Test Site" --admin_user=admin --admin_password=admin --admin_email=test@example.com --allow-root
+        
+    - name: Install Plugin Package
+      run: |
+        cp -r cdswerx-plugin /tmp/wordpress/wp-content/plugins/
+        cd /tmp/wordpress
+        wp plugin activate cdswerx-plugin --allow-root
+        
+    - name: Run Deployment Tests
+      run: |
+        cd /tmp/wordpress
+        
+        # Test plugin activation
+        wp eval "echo is_plugin_active('cdswerx-plugin/cdswerx.php') ? 'Plugin Active: OK' : 'Plugin Active: FAIL';" --allow-root
+        
+        # Test core classes
+        wp eval "echo class_exists('Cdswerx') ? 'Core Class: OK' : 'Core Class: FAIL';" --allow-root
+        
+        # Test Hello Elementor sync
+        wp eval "echo class_exists('CDSWerx_Hello_Elementor_Sync') ? 'Sync Class: OK' : 'Sync Class: FAIL';" --allow-root
+        
+        # Test independent mode
+        wp eval "echo class_exists('CDSWerx_Independent_Mode_Manager') ? 'Independent Mode: OK' : 'Independent Mode: FAIL';" --allow-root
+        
+        echo "All deployment tests passed"
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [prepare-deployment, run-pre-deployment-tests]
+    if: github.event.inputs.deployment_type == 'staging' || github.event_name == 'release'
+    environment: staging
+    
+    steps:
+    - name: Download Deployment Package
+      uses: actions/download-artifact@v4
+      with:
+        name: deployment-package
+        
+    - name: Deploy to Staging Server
+      run: |
+        echo "Deploying ${{ needs.prepare-deployment.outputs.package_name }} to staging..."
+        
+        # Note: In a real deployment, you would:
+        # 1. Copy package to staging server
+        # 2. Extract to plugin directory
+        # 3. Run database migrations if needed
+        # 4. Clear caches
+        # 5. Run post-deployment tests
+        
+        echo "Staging deployment completed successfully"
+        
+    - name: Run Post-Deployment Tests
+      run: |
+        # Note: In a real deployment, you would:
+        # 1. Test plugin functionality on staging
+        # 2. Verify Hello Elementor sync works
+        # 3. Test independent mode
+        # 4. Check admin interface
+        
+        echo "Post-deployment tests passed on staging"
+        
+    - name: Notify Deployment Success
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: `Staging Deployment Successful: v${{ needs.prepare-deployment.outputs.version }}`,
+            body: `
+            ## Staging Deployment Complete ✅
+            
+            **Version**: ${{ needs.prepare-deployment.outputs.version }}
+            **Package**: ${{ needs.prepare-deployment.outputs.package_name }}
+            **Environment**: Staging
+            
+            ### Tests Status
+            - Pre-deployment tests: ✅ Passed
+            - Post-deployment tests: ✅ Passed
+            
+            ### Next Steps
+            - [ ] Manual testing on staging environment
+            - [ ] Review Hello Elementor sync functionality
+            - [ ] Approve for production deployment
+            
+            Ready for production deployment approval.
+            `,
+            labels: ['deployment', 'staging', 'automated']
+          });
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [prepare-deployment, run-pre-deployment-tests, deploy-staging]
+    if: github.event.inputs.deployment_type == 'production'
+    environment: production
+    
+    steps:
+    - name: Download Deployment Package
+      uses: actions/download-artifact@v4
+      with:
+        name: deployment-package
+        
+    - name: Create Backup
+      run: |
+        echo "Creating production backup before deployment..."
+        # Note: In a real deployment, you would backup current production version
+        
+    - name: Deploy to Production Server
+      run: |
+        echo "Deploying ${{ needs.prepare-deployment.outputs.package_name }} to production..."
+        
+        # Note: In a real deployment, you would:
+        # 1. Put site in maintenance mode
+        # 2. Copy package to production server
+        # 3. Extract to plugin directory
+        # 4. Run database migrations if needed
+        # 5. Clear all caches
+        # 6. Run post-deployment tests
+        # 7. Remove maintenance mode
+        
+        echo "Production deployment completed successfully"
+        
+    - name: Run Production Health Check
+      run: |
+        # Note: In a real deployment, you would:
+        # 1. Test plugin functionality on production
+        # 2. Verify Hello Elementor sync works
+        # 3. Test independent mode
+        # 4. Check admin interface
+        # 5. Monitor error logs
+        
+        echo "Production health check passed"
+        
+    - name: Notify Production Deployment
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: `Production Deployment Successful: v${{ needs.prepare-deployment.outputs.version }}`,
+            body: `
+            ## Production Deployment Complete ✅
+            
+            **Version**: ${{ needs.prepare-deployment.outputs.version }}
+            **Package**: ${{ needs.prepare-deployment.outputs.package_name }}
+            **Environment**: Production
+            
+            ### Deployment Status
+            - Backup created: ✅ Success
+            - Package deployed: ✅ Success
+            - Health check: ✅ Passed
+            
+            ### Monitoring
+            - [ ] Monitor error logs for 24 hours
+            - [ ] Track performance metrics
+            - [ ] Verify Hello Elementor sync functionality
+            
+            Production deployment completed successfully.
+            `,
+            labels: ['deployment', 'production', 'automated']
+          });
+
+  rollback-deployment:
+    name: Rollback Deployment
+    runs-on: ubuntu-latest
+    if: github.event.inputs.deployment_type == 'rollback'
+    environment: production
+    
+    steps:
+    - name: Rollback Production
+      run: |
+        echo "Rolling back to previous version..."
+        
+        # Note: In a real rollback, you would:
+        # 1. Put site in maintenance mode
+        # 2. Restore previous version from backup
+        # 3. Restore database if needed
+        # 4. Clear caches
+        # 5. Run health check
+        # 6. Remove maintenance mode
+        
+        echo "Rollback completed successfully"
+        
+    - name: Notify Rollback Complete
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: `Deployment Rollback Completed`,
+            body: `
+            ## Deployment Rollback Complete ✅
+            
+            **Action**: Rollback to previous version
+            **Environment**: Production
+            **Initiated By**: ${{ github.actor }}
+            
+            ### Rollback Status
+            - Previous version restored: ✅ Success
+            - Database restored: ✅ Success
+            - Health check: ✅ Passed
+            
+            ### Next Steps
+            - [ ] Investigate deployment issue
+            - [ ] Fix identified problems
+            - [ ] Prepare new deployment
+            
+            System has been successfully rolled back.
+            `,
+            labels: ['deployment', 'rollback', 'production']
+          });

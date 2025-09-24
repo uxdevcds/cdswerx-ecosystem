@@ -1,0 +1,289 @@
+name: CDSWerx Theme Child CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  release:
+    types: [ created ]
+
+jobs:
+  validate:
+    name: CDSWerx Theme Child Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: dom, curl, libxml, mbstring, zip
+
+    - name: Validate child theme structure
+      run: |
+        # Check required files exist
+        test -f style.css || (echo "Missing style.css" && exit 1)
+        test -f functions.php || (echo "Missing functions.php" && exit 1)
+        
+        echo "✓ All required child theme files present"
+
+    - name: Validate child theme header
+      run: |
+        # Check style.css has proper child theme header
+        grep -q "Theme Name:" style.css || (echo "Missing Theme Name in style.css" && exit 1)
+        grep -q "Template:" style.css || (echo "Missing Template declaration in style.css" && exit 1)
+        
+        # Ensure Template points to parent theme
+        TEMPLATE=$(grep "Template:" style.css | cut -d: -f2 | xargs)
+        if [ "$TEMPLATE" != "cdswerx-theme" ] && [ "$TEMPLATE" != "cdswerx-elementor" ]; then
+          echo "⚠️  Template should reference parent theme directory"
+        fi
+        
+        echo "✓ Child theme header is valid"
+
+    - name: Validate asset structure
+      run: |
+        # Check assets directory structure
+        test -d assets || (echo "Missing assets directory" && exit 1)
+        test -d assets/css || (echo "Missing assets/css directory" && exit 1)
+        
+        # Check for key CSS files
+        test -f assets/css/cds-globalstyles.css || echo "⚠️  Missing cds-globalstyles.css"
+        test -f assets/css/admin-style.css || echo "⚠️  Missing admin-style.css"
+        
+        echo "✓ Asset structure validated"
+
+    - name: PHP Syntax Check
+      run: |
+        find . -name "*.php" -exec php -l {} \; | grep -v "No syntax errors"
+        if [ $? -eq 0 ]; then
+          echo "✓ No PHP syntax errors found"
+        else
+          echo "✗ PHP syntax errors found"
+          exit 1
+        fi
+
+  css-quality:
+    name: CSS Quality Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install Stylelint
+      run: |
+        npm install -g stylelint stylelint-config-standard
+
+    - name: Create Stylelint config
+      run: |
+        cat > .stylelintrc.json << 'EOF'
+        {
+          "extends": ["stylelint-config-standard"],
+          "rules": {
+            "at-rule-no-unknown": [true, {
+              "ignoreAtRules": ["tailwind", "apply", "variants", "responsive", "screen"]
+            }],
+            "declaration-block-trailing-semicolon": null,
+            "no-descending-specificity": null
+          }
+        }
+        EOF
+
+    - name: Lint CSS files
+      run: |
+        find assets/css -name "*.css" -exec stylelint {} \;
+
+    - name: Check CSS file sizes
+      run: |
+        echo "CSS file sizes:"
+        find assets/css -name "*.css" -exec wc -c {} \;
+        
+        # Warn if any CSS file is over 100KB
+        find assets/css -name "*.css" -size +100k -exec echo "⚠️  Large CSS file: {}" \;
+
+  asset-optimization:
+    name: Asset Optimization Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Check for optimized assets
+      run: |
+        echo "Checking asset optimization..."
+        
+        # Check if images are optimized
+        find assets -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" | while read img; do
+          size=$(stat -f%z "$img" 2>/dev/null || stat -c%s "$img")
+          if [ $size -gt 500000 ]; then
+            echo "⚠️  Large image file: $img ($size bytes)"
+          fi
+        done
+        
+        # Check for minified CSS in production
+        find assets/css -name "*.css" | while read css; do
+          if grep -q "  " "$css" && [[ ! "$css" =~ \.min\. ]]; then
+            echo "💡 Consider minifying: $css"
+          fi
+        done
+
+  performance:
+    name: Performance Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Analyze CSS performance
+      run: |
+        echo "CSS Performance Analysis:"
+        
+        # Count CSS rules
+        total_rules=0
+        for css in assets/css/*.css; do
+          if [ -f "$css" ]; then
+            rules=$(grep -c '{' "$css")
+            echo "$css: $rules rules"
+            total_rules=$((total_rules + rules))
+          fi
+        done
+        
+        echo "Total CSS rules: $total_rules"
+        
+        if [ $total_rules -gt 4000 ]; then
+          echo "⚠️  High number of CSS rules may impact performance"
+        fi
+
+    - name: Check for unused CSS patterns
+      run: |
+        # Look for potentially unused CSS patterns
+        echo "Checking for common unused CSS patterns..."
+        
+        for css in assets/css/*.css; do
+          if [ -f "$css" ]; then
+            # Check for overly specific selectors
+            grep -n "\..*\..*\..*\." "$css" || true
+          fi
+        done
+
+  integration-test:
+    name: Parent Theme Integration
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout child theme
+      uses: actions/checkout@v4
+      with:
+        path: child-theme
+
+    - name: Checkout parent theme
+      uses: actions/checkout@v4
+      with:
+        repository: cdswerx/cdswerx-theme
+        path: parent-theme
+      continue-on-error: true
+
+    - name: Test parent-child integration
+      run: |
+        echo "Testing parent-child theme integration..."
+        
+        # Check if functions.php properly enqueues parent styles
+        if grep -q "get_template_directory_uri" child-theme/functions.php; then
+          echo "✓ Parent theme styles are properly enqueued"
+        else
+          echo "⚠️  Parent theme styles may not be properly enqueued"
+        fi
+        
+        # Check for Template declaration in style.css
+        template=$(grep "Template:" child-theme/style.css | cut -d: -f2 | xargs)
+        echo "Child theme template: $template"
+
+  build:
+    name: Build Child Theme
+    runs-on: ubuntu-latest
+    needs: [validate, css-quality, asset-optimization]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+      continue-on-error: true
+
+    - name: Build assets (if build process exists)
+      run: |
+        if [ -f "package.json" ]; then
+          npm ci
+          npm run build || echo "No build script found"
+        else
+          echo "No package.json found, copying assets as-is"
+        fi
+
+    - name: Optimize CSS
+      run: |
+        # Basic CSS minification (if no build process)
+        if command -v cleancss >/dev/null 2>&1; then
+          find assets/css -name "*.css" ! -name "*.min.css" -exec cleancss -o {}.min {} \;
+        fi
+
+    - name: Create child theme ZIP
+      run: |
+        # Create clean child theme directory
+        mkdir -p cdswerx-child-theme
+        
+        # Copy child theme files
+        rsync -av --exclude='.git*' \
+                  --exclude='node_modules' \
+                  --exclude='src' \
+                  --exclude='package*.json' \
+                  --exclude='webpack.config.js' \
+                  . cdswerx-child-theme/
+        
+        # Create ZIP file
+        zip -r cdswerx-child-theme-${{ github.sha }}.zip cdswerx-child-theme
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: cdswerx-child-theme-${{ github.sha }}
+        path: cdswerx-child-theme-${{ github.sha }}.zip
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.event_name == 'release'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: cdswerx-child-theme-${{ github.sha }}
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./cdswerx-child-theme-${{ github.sha }}.zip
+        asset_name: cdswerx-child-theme-${{ github.event.release.tag_name }}.zip
+        asset_content_type: application/zip

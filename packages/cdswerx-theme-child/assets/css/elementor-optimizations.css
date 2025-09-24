@@ -1,0 +1,171 @@
+/**
+ * CDSWerx Elementor Optimizations
+ * 
+ * Styles specifically for Elementor-built pages to enhance
+ * the visual integration between Elementor and CDSWerx theme.
+ * 
+ * @since TE-5
+ */
+
+/* ==========================================================================
+   Elementor Container Optimizations
+   ========================================================================== */
+
+.elementor-widget-container {
+    /* Enhanced container spacing */
+    box-sizing: border-box;
+}
+
+/* Elementor section improvements */
+.elementor-section {
+    position: relative;
+}
+
+.elementor-section .elementor-container {
+    /* Ensure proper container behavior */
+    max-width: 100%;
+}
+
+/* ==========================================================================
+   CDSWerx + Elementor Typography Enhancements
+   ========================================================================== */
+
+/* Ensure CDSWerx typography plays well with Elementor */
+.elementor-widget-heading h1,
+.elementor-widget-heading h2,
+.elementor-widget-heading h3,
+.elementor-widget-heading h4,
+.elementor-widget-heading h5,
+.elementor-widget-heading h6 {
+    font-family: inherit;
+    line-height: 1.2;
+}
+
+/* Text widget optimizations */
+.elementor-widget-text-editor {
+    line-height: 1.6;
+}
+
+/* ==========================================================================
+   Form Styling for Elementor Forms
+   ========================================================================== */
+
+.elementor-form .elementor-field-group {
+    margin-bottom: 1rem;
+}
+
+.elementor-form .elementor-field {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.elementor-form .elementor-field:focus {
+    border-color: #0073aa;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.1);
+}
+
+/* ==========================================================================
+   Button Enhancements
+   ========================================================================== */
+
+.elementor-button {
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+.elementor-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+   Image and Media Optimizations
+   ========================================================================== */
+
+.elementor-widget-image img {
+    height: auto;
+    max-width: 100%;
+}
+
+/* Gallery improvements */
+.elementor-gallery__item {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   Navigation Menu Enhancements (when used in header)
+   ========================================================================== */
+
+.elementor-nav-menu .elementor-nav-menu__main {
+    display: flex;
+    align-items: center;
+}
+
+.elementor-nav-menu .menu-item a {
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+/* ==========================================================================
+   Mobile Responsiveness Enhancements
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .elementor-section {
+        padding: 1rem 0;
+    }
+    
+    .elementor-container {
+        padding: 0 1rem;
+    }
+    
+    .elementor-widget-heading h1 {
+        font-size: 1.8rem;
+    }
+    
+    .elementor-widget-heading h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* ==========================================================================
+   Performance Optimizations
+   ========================================================================== */
+
+/* Reduce layout shifts */
+.elementor-invisible {
+    visibility: hidden;
+}
+
+/* Smooth loading transitions */
+.elementor-widget {
+    transition: opacity 0.3s ease;
+}
+
+/* ==========================================================================
+   CDSWerx Plugin Integration Helpers
+   ========================================================================== */
+
+/* Classes for plugin-generated content within Elementor */
+.cdswerx-elementor-widget {
+    /* Base styling for CDSWerx widgets in Elementor */
+}
+
+.cdswerx-enhanced-content {
+    /* Enhanced content styling */
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+/* Custom spacing utilities for CDSWerx + Elementor */
+.cdswerx-spacing-small { margin: 0.5rem 0; }
+.cdswerx-spacing-medium { margin: 1rem 0; }
+.cdswerx-spacing-large { margin: 2rem 0; }

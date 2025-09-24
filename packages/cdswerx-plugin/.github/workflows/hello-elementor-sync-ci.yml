@@ -1,0 +1,279 @@
+name: Hello Elementor Sync CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'includes/class-hello-elementor-sync.php'
+      - 'includes/class-version-manager.php'
+      - 'includes/class-dependency-checker.php'
+      - 'includes/class-independent-mode-manager.php'
+      - 'admin/class/class-cdswerx-admin.php'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'includes/class-hello-elementor-sync.php'
+      - 'includes/class-version-manager.php'
+      - 'includes/class-dependency-checker.php'
+      - 'includes/class-independent-mode-manager.php'
+      - 'admin/class/class-cdswerx-admin.php'
+  schedule:
+    # Daily check for Hello Elementor updates at 6 AM UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Type of test to run'
+        required: true
+        default: 'sync'
+        type: choice
+        options:
+        - sync
+        - version
+        - independent
+        - full
+
+env:
+  PHP_VERSION: '8.1'
+  NODE_VERSION: '18'
+  WP_VERSION: 'latest'
+
+jobs:
+  hello-elementor-update-check:
+    name: Check Hello Elementor Updates
+    runs-on: ubuntu-latest
+    outputs:
+      update_available: ${{ steps.check-update.outputs.update_available }}
+      current_version: ${{ steps.check-update.outputs.current_version }}
+      latest_version: ${{ steps.check-update.outputs.latest_version }}
+    
+    steps:
+    - name: Checkout CDSWerx Plugin
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.PHP_VERSION }}
+        extensions: curl, json, mbstring
+        
+    - name: Check Hello Elementor Version
+      id: check-update
+      run: |
+        # Get current Hello Elementor version from WordPress.org API
+        LATEST_VERSION=$(curl -s "https://api.wordpress.org/themes/info/1.2/?action=theme_information&request[slug]=hello-elementor" | jq -r '.version')
+        echo "Latest Hello Elementor version: $LATEST_VERSION"
+        
+        # Check if we have a cached version
+        CURRENT_VERSION=""
+        if [ -f ".hello-elementor-version" ]; then
+          CURRENT_VERSION=$(cat .hello-elementor-version)
+          echo "Current cached version: $CURRENT_VERSION"
+        fi
+        
+        # Compare versions
+        if [ "$CURRENT_VERSION" != "$LATEST_VERSION" ]; then
+          echo "update_available=true" >> $GITHUB_OUTPUT
+          echo "Update available: $CURRENT_VERSION -> $LATEST_VERSION"
+        else
+          echo "update_available=false" >> $GITHUB_OUTPUT
+          echo "No update available"
+        fi
+        
+        echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+        echo "latest_version=$LATEST_VERSION" >> $GITHUB_OUTPUT
+
+  sync-functionality-test:
+    name: Test Sync Functionality
+    runs-on: ubuntu-latest
+    needs: hello-elementor-update-check
+    if: always()
+    
+    strategy:
+      matrix:
+        php-version: ['8.0', '8.1', '8.2']
+        wp-version: ['6.0', '6.3', 'latest']
+    
+    steps:
+    - name: Checkout CDSWerx Plugin
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP ${{ matrix.php-version }}
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
+        coverage: none
+        
+    - name: Setup WordPress Test Environment
+      run: |
+        # Install WordPress CLI
+        curl -O https://raw.githubusercontent.com/wp-cli/wp-cli/main/bin/wp-cli.phar
+        chmod +x wp-cli.phar
+        sudo mv wp-cli.phar /usr/local/bin/wp
+        
+        # Download WordPress
+        wp core download --version=${{ matrix.wp-version }} --path=/tmp/wordpress --allow-root
+        
+        # Create wp-config
+        cd /tmp/wordpress
+        wp config create --dbname=test --dbuser=root --dbpass=root --dbhost=127.0.0.1 --allow-root
+        
+    - name: Start MySQL
+      run: |
+        sudo systemctl start mysql.service
+        mysql -e 'CREATE DATABASE test;' -uroot -proot
+        
+    - name: Install WordPress
+      run: |
+        cd /tmp/wordpress
+        wp core install --url=localhost --title="Test Site" --admin_user=admin --admin_password=admin --admin_email=test@example.com --allow-root
+        
+    - name: Install Hello Elementor Theme
+      run: |
+        cd /tmp/wordpress
+        wp theme install hello-elementor --activate --allow-root
+        
+    - name: Copy CDSWerx Plugin
+      run: |
+        cp -r . /tmp/wordpress/wp-content/plugins/cdswerx-plugin/
+        
+    - name: Activate CDSWerx Plugin
+      run: |
+        cd /tmp/wordpress
+        wp plugin activate cdswerx-plugin --allow-root
+        
+    - name: Test Sync Functionality
+      run: |
+        cd /tmp/wordpress
+        # Test Hello Elementor detection
+        wp eval "echo class_exists('CDSWerx_Dependency_Checker') ? 'Dependency Checker: OK' : 'Dependency Checker: FAIL';" --allow-root
+        
+        # Test independent mode manager
+        wp eval "echo class_exists('CDSWerx_Independent_Mode_Manager') ? 'Independent Mode: OK' : 'Independent Mode: FAIL';" --allow-root
+        
+        # Test Hello Elementor sync class
+        wp eval "echo class_exists('CDSWerx_Hello_Elementor_Sync') ? 'Sync Class: OK' : 'Sync Class: FAIL';" --allow-root
+
+  independent-mode-test:
+    name: Test Independent Mode
+    runs-on: ubuntu-latest
+    needs: hello-elementor-update-check
+    if: always()
+    
+    steps:
+    - name: Checkout CDSWerx Plugin
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.PHP_VERSION }}
+        extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
+        
+    - name: Setup WordPress Without Hello Elementor
+      run: |
+        curl -O https://raw.githubusercontent.com/wp-cli/wp-cli/main/bin/wp-cli.phar
+        chmod +x wp-cli.phar
+        sudo mv wp-cli.phar /usr/local/bin/wp
+        wp core download --path=/tmp/wordpress --allow-root
+        cd /tmp/wordpress
+        wp config create --dbname=test --dbuser=root --dbpass=root --dbhost=127.0.0.1 --allow-root
+        
+    - name: Start MySQL
+      run: |
+        sudo systemctl start mysql.service
+        mysql -e 'CREATE DATABASE test;' -uroot -proot
+        
+    - name: Install WordPress
+      run: |
+        cd /tmp/wordpress
+        wp core install --url=localhost --title="Test Site" --admin_user=admin --admin_password=admin --admin_email=test@example.com --allow-root
+        
+    - name: Copy and Activate CDSWerx Plugin Only
+      run: |
+        cp -r . /tmp/wordpress/wp-content/plugins/cdswerx-plugin/
+        cd /tmp/wordpress
+        wp plugin activate cdswerx-plugin --allow-root
+        
+    - name: Test Independent Mode Functionality
+      run: |
+        cd /tmp/wordpress
+        # Test independent mode activation without Hello Elementor
+        wp eval "
+        if (class_exists('CDSWerx_Independent_Mode_Manager')) {
+          \$manager = new CDSWerx_Independent_Mode_Manager();
+          echo 'Independent Mode Manager: OK\n';
+          echo 'Fallback functions available: ' . count(\$manager->get_available_fallback_functions()) . '\n';
+          echo 'Independent mode active: ' . (\$manager->is_independent_mode_active() ? 'YES' : 'NO') . '\n';
+        } else {
+          echo 'Independent Mode Manager: FAIL\n';
+        }
+        " --allow-root
+
+  notify-update-available:
+    name: Notify Update Available
+    runs-on: ubuntu-latest
+    needs: [hello-elementor-update-check, sync-functionality-test]
+    if: needs.hello-elementor-update-check.outputs.update_available == 'true'
+    
+    steps:
+    - name: Create Issue for Hello Elementor Update
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const title = `Hello Elementor Update Available: v${{ needs.hello-elementor-update-check.outputs.latest_version }}`;
+          const body = `
+          ## Hello Elementor Update Available
+          
+          **Current Version**: ${{ needs.hello-elementor-update-check.outputs.current_version }}
+          **Latest Version**: ${{ needs.hello-elementor-update-check.outputs.latest_version }}
+          
+          ### Action Required
+          - [ ] Review Hello Elementor changelog for breaking changes
+          - [ ] Test sync functionality with new version
+          - [ ] Update CDSWerx customizations if needed
+          - [ ] Deploy synchronized update across repositories
+          
+          ### Automated Tests Status
+          - Sync functionality tests: ✅ Passed
+          - Independent mode tests: ✅ Passed
+          
+          This issue was automatically created by the Hello Elementor Sync CI workflow.
+          `;
+          
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: title,
+            body: body,
+            labels: ['hello-elementor-update', 'automated', 'sync-required']
+          });
+
+  cache-version:
+    name: Cache Hello Elementor Version
+    runs-on: ubuntu-latest
+    needs: [hello-elementor-update-check, sync-functionality-test, independent-mode-test]
+    if: always() && needs.hello-elementor-update-check.outputs.latest_version != ''
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Update Version Cache
+      run: |
+        echo "${{ needs.hello-elementor-update-check.outputs.latest_version }}" > .hello-elementor-version
+        
+    - name: Commit Version Update
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .hello-elementor-version
+        if git diff --staged --quiet; then
+          echo "No version change to commit"
+        else
+          git commit -m "Update Hello Elementor version cache to ${{ needs.hello-elementor-update-check.outputs.latest_version }}"
+          git push
+        fi

@@ -1,0 +1,249 @@
+/*////////////////////////////////////////////////////////////////////////////////////////////*/
+/*////////////////////////////////////// CDS CSS ////////////////////////////////////////////*/
+/* Below are styles for customized elements and components of elementor and assorted plugins  */
+/*////////////////////////////////////////////////////////////////////////////////////////////*/
+
+
+/*////////////////////////////////////////////////////////////////////////////*/
+/*/////////////////// Elementor Interactive Widgets Styling //////////////////////*/
+/*////////////////////////////////////////////////////////////////////////////*/
+
+/*Text Listing - arrow align right*/
+.float-arrow-right a.qodef-qi-button {
+    justify-content: space-between;
+    width: 100%;
+}
+
+/*******************************************************/
+/* Elementor Icon List - fix list display*/
+/*******************************************************/
+/*remove set width*/
+li.elementor-icon-list-item>a>span {
+    display: inline-flex;
+}
+
+/*fix gap spacing*/
+ul.elementor-icon-list-items.elementor-inline-items {
+    gap: 15px;
+}
+
+/*******************************************************/
+/* Elementor Icon Box*/
+/*******************************************************/
+
+.elementor-icon-box-wrapper {
+    display: flex;
+    /*fix horizontal display*/
+}
+
+.elementor-icon-box-icon {
+    margin-right: 15px;
+}
+
+/*Make the whole icon-box a link (not only icon & title)*/
+.elementor-widget-icon-box a:after {
+    content: "";
+    display: block !IMPORTANT;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.elementor-icon-box-icon {
+    z-index: 2;
+}
+
+/*******************************************************/
+/* Elementor CTA Widget - set width to dynamic svg image */
+/*******************************************************/
+.elementor-content-item.elementor-cta__content-item.elementor-cta__image svg {
+    width: 48px;
+}
+
+/*////////////////////////////////////////////////////////////////////////////*/
+/*/////////////////// Qode Interactive Widgets Styling //////////////////////*/
+/*////////////////////////////////////////////////////////////////////////////*/
+
+/*******************************************************/
+/*Qode Parallax Image Widget*/
+/*Add Border Radius */
+/*******************************************************/
+.qodef-e-main-image img,
+.qodef-e-parallax-image.qodef-position--bottom-right img,
+.qodef-e-parallax-image.qodef-position--bottom-left img,
+.qodef-e-parallax-image.qodef-position--top-right img,
+.qodef-e-parallax-image.qodef-position--top-left img {
+    border-radius: 30px;
+}
+
+/*******************************************************/
+/*Qode Button*/
+/*******************************************************/
+/*adjust width to accomodate long text*/
+a.qodef-qi-button.qodef-type--standard.qodef-size--small {
+    width: max-content;
+}
+
+/*******************************************************/
+/*Qode CTA Widget*/
+/*******************************************************/
+/*Adjust Border Radius for */
+.qodef-qi-call-to-action .qodef-m-inner {
+    border-radius: 10px;
+}
+
+/*Add vertical format to Qode CTA Widget*/
+.cta-vertical .qodef-qi-call-to-action.qodef-layout--standard .qodef-m-inner {
+    flex-direction: column
+}
+
+/*******************************************************/
+/* Qode Banner Widget - Fix image so its not cutoff */
+/*******************************************************/
+.qodef-qi-banner .qodef-m-image img {
+    display: block
+}
+
+/*******************************************************/
+/* Qode Content Menu Widget - remove default uppercase */
+/*******************************************************/
+.qodef-qi-content-menu nav ul li a {
+    text-transform: inherit !important;
+}
+
+/*******************************************************/
+/* Qode FAQ Widget*/
+/*Create float appearance
+/*******************************************************/
+
+
+.faq-float .qodef-qi-faq .qodef-e-title-holder .qodef-e-title {
+    margin-right: 60px;
+}
+
+.faq-float .qodef-qi-faq.qodef-style--standard .qodef-e-title-holder,
+.faq-float .qodef-qi-faq.qodef-style--boxed .qodef-e-title-holder,
+.faq-float .qodef-qi-faq.qodef-style--border-between .qodef-e-title-holder {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 21px 0 0;
+    padding: 20px 25px 20px 25px;
+    border-radius: 12px;
+    border-bottom: 0px;
+    /*enable if not using all borders*/
+    /*border: 1px solid;
+border-bottom-left-radius: 0;/*this is bottom of title border-radius*/
+    /*border-bottom-right-radius: 0; this is bottom of title border-radius*/
+    transition: all .2s ease, border-color .2s .3s;
+}
+
+
+.faq-float .qodef-qi-faq.qodef-style--standard .qodef-e-title-holder.ui-accordion-header-collapsed:nth-last-child(2),
+.faq-float .qodef-qi-faq.qodef-style--border-between .qodef-e-title-holder.ui-accordion-header-collapsed:nth-last-child(2),
+.faq-float .qodef-qi-faq.qodef-style--boxed .qodef-e-title-holder.ui-accordion-header-collapsed:nth-last-child(2) {
+    border-color: transparent !important;
+}
+
+.faq-float .qodef-qi-faq.qodef-style--standard .qodef-e-title-holder.ui-state-active,
+.faq-float .qodef-qi-faq.qodef-style--border-between .qodef-e-title-holder.ui-state-active,
+.faq-float .qodef-qi-faq.qodef-style--boxed .qodef-e-title-holder.ui-state-active {
+    border-bottom-color: transparent !important;
+    /*background-color: transparent !important;*/
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding: 20px 25px 20px 25px;
+    transition-delay: 0s, 0s;
+
+}
+
+.faq-float .qodef-qi-faq.qodef-style--standard .qodef-e-content.ui-accordion-content-active,
+.faq-float .qodef-qi-faq.qodef-style--boxed .qodef-e-content.ui-accordion-content-active,
+.faq-float .qodef-qi-faq.qodef-style--border-between .qodef-e-content.ui-accordion-content-active {
+    padding: 20px 50px 61px 45px;
+    margin: 0;
+    border-radius: 12px;
+    /*    border: 1px solid #D5D5D5;*/
+    border-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    transition: none;
+    box-shadow: 0px 30px 30px 5px rgba(0, 0, 0, .07);
+
+}
+
+
+
+/*////////////////////////////////////////////////////////////////////////////*/
+/*/////////////////// Crocobloc Interactive Widgets Styling //////////////////////*/
+/*////////////////////////////////////////////////////////////////////////////*/
+/*******************************************************/
+/* JetMenu Hamburger – force menu icons to inherit set size */
+/*******************************************************/
+.jet-mobile-menu .jet-dropdown-arrow {
+    width: inherit !important;
+    height: inherit !important;
+}
+
+.jet-mobile-menu__back {
+    min-width: inherit !important;
+    min-height: inherit !important;
+}
+
+.jet-mobile-menu__back svg:not([width]) {
+    min-width: inherit !important;
+}
+
+.jet-mobile-menu__back svg:not([height]) {
+    min-height: inherit !important;
+}
+
+/*******************************************************/
+/* JetBlock Accordion – fix justify content so items stretch */
+/*******************************************************/
+
+.jet-toggle__label-text {
+    margin: 0 auto;
+    width: 100%;
+}
+
+/*******************************************************/
+/* JetBlock Price List – fix padding on list items */
+/*******************************************************/
+.jet-price-list {
+    padding-left: 0px
+}
+
+/*******************************************************/
+/* Jet Dynamic Fields – fix icon padding on list items */
+/*******************************************************/
+.jet-listing-dynamic-field__inline-wrap {
+    align-items: flex-start !important;
+}
+
+.jet-listing-dynamic-field__icon.is-svg-icon {
+    padding-top: 2px;
+}
+
+.jet-listing-dynamic-link__label {
+    display: inline-flex;
+    /*fix direction of icon & label*/
+}
+
+.jet-listing-dynamic-link__link {
+    align-items: flex-start;
+    /*align icon to top*/
+}
+
+/*******************************************************/
+/* Jet Posts  – fix border radius mask so full radius shows */
+/*******************************************************/
+
+.jet-posts .post-thumbnail {
+    overflow: visible;
+}
+
+.jet-posts .post-thumbnail img {
+    border-radius: 16px;
+}

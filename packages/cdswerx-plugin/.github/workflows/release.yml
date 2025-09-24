@@ -1,0 +1,101 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        tools: composer
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        composer install --no-dev --optimize-autoloader
+        npm ci
+
+    - name: Build production assets
+      run: npm run build
+
+    - name: Generate changelog
+      id: changelog
+      run: |
+        # Extract changelog for this version
+        VERSION=${GITHUB_REF#refs/tags/v}
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        
+        # Get changelog content between this and previous version
+        CHANGELOG=$(sed -n "/## \[$VERSION\]/,/## \[/p" CHANGELOG.md | sed '$d')
+        echo "changelog<<EOF" >> $GITHUB_OUTPUT
+        echo "$CHANGELOG" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
+    - name: Update version in plugin file
+      run: |
+        VERSION=${{ steps.changelog.outputs.version }}
+        sed -i "s/Version: .*/Version: $VERSION/" cdswerx.php
+        sed -i "s/CDSWERX_VERSION', '.*'/CDSWERX_VERSION', '$VERSION'/" cdswerx.php
+
+    - name: Create plugin ZIP
+      run: |
+        # Create clean directory structure
+        mkdir -p cdswerx-plugin
+        
+        # Copy plugin files (exclude development files)
+        rsync -av --exclude='.git*' \
+                  --exclude='node_modules' \
+                  --exclude='tests' \
+                  --exclude='bin' \
+                  --exclude='composer.json' \
+                  --exclude='composer.lock' \
+                  --exclude='package*.json' \
+                  --exclude='webpack.config.js' \
+                  --exclude='phpunit.xml' \
+                  --exclude='.phpcs.xml' \
+                  --exclude='src' \
+                  . cdswerx-plugin/
+        
+        # Create ZIP file
+        zip -r cdswerx-plugin-${{ steps.changelog.outputs.version }}.zip cdswerx-plugin
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: Release v${{ steps.changelog.outputs.version }}
+        body: ${{ steps.changelog.outputs.changelog }}
+        files: cdswerx-plugin-${{ steps.changelog.outputs.version }}.zip
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Update stable tag in readme
+      run: |
+        VERSION=${{ steps.changelog.outputs.version }}
+        sed -i "s/Stable tag: .*/Stable tag: $VERSION/" README.txt
+        
+        # Commit updated files
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add cdswerx.php README.txt
+        git commit -m "Update version to $VERSION" || exit 0
+        git push origin HEAD:main

@@ -1,0 +1,72 @@
+# Deployment ignore file for CDSWerx Plugin
+# Files and directories to exclude from deployment packages
+
+# Development files
+.git/
+.github/
+.gitignore
+.deployignore
+.editorconfig
+.vscode/
+*.code-workspace
+
+# Documentation
+README.md
+CHANGELOG.md
+docs/
+*.md
+
+# Development dependencies
+node_modules/
+vendor/
+composer.json
+composer.lock
+package.json
+package-lock.json
+webpack.config.js
+gulpfile.js
+
+# Build tools
+bin/
+tests/
+phpunit.xml
+codecov.yml
+.phpcs.xml
+
+# Temporary files
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+error_log
+debug.log
+
+# IDE files
+.idea/
+*.sublime-*
+.vscode/
+
+# OS files
+.DS_Store
+desktop.ini
+
+# Backup files
+*.backup
+*.orig
+
+# Test files
+*test*
+*Test*
+*TEST*
+
+# Development builds
+src/
+build/
+dist/
+.cache/

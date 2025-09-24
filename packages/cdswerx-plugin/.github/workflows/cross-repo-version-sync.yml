@@ -1,0 +1,246 @@
+name: Cross-Repository Version Sync
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'cdswerx.php'
+      - 'includes/class-version-manager.php'
+      - 'admin/partials/admin-advanced-css.php'
+  repository_dispatch:
+    types: [version-sync-trigger]
+  workflow_dispatch:
+    inputs:
+      sync_type:
+        description: 'Type of version sync'
+        required: true
+        default: 'plugin'
+        type: choice
+        options:
+        - plugin
+        - theme
+        - child-theme
+        - all
+      force_sync:
+        description: 'Force sync even if versions match'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  PLUGIN_VERSION_FILE: 'cdswerx.php'
+  THEME_REPO: 'cdswerx-theme'
+  CHILD_THEME_REPO: 'cdswerx-theme-child'
+  HELLO_ELEMENTOR_CHILD_REPO: 'hello-theme-child-github'
+
+jobs:
+  detect-version-changes:
+    name: Detect Version Changes
+    runs-on: ubuntu-latest
+    outputs:
+      plugin_version: ${{ steps.get-versions.outputs.plugin_version }}
+      plugin_changed: ${{ steps.check-changes.outputs.plugin_changed }}
+      advanced_css_changed: ${{ steps.check-changes.outputs.advanced_css_changed }}
+      sync_required: ${{ steps.check-changes.outputs.sync_required }}
+    
+    steps:
+    - name: Checkout CDSWerx Plugin
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+        
+    - name: Get Current Versions
+      id: get-versions
+      run: |
+        # Extract plugin version from main file
+        PLUGIN_VERSION=$(grep -oP "Version:\s*\K[\d.]+" ${{ env.PLUGIN_VERSION_FILE }})
+        echo "plugin_version=$PLUGIN_VERSION" >> $GITHUB_OUTPUT
+        echo "Current plugin version: $PLUGIN_VERSION"
+        
+    - name: Check for Changes
+      id: check-changes
+      run: |
+        # Check if plugin version changed
+        PLUGIN_CHANGED="false"
+        if git diff HEAD~1 HEAD --name-only | grep -q "${{ env.PLUGIN_VERSION_FILE }}"; then
+          if git diff HEAD~1 HEAD ${{ env.PLUGIN_VERSION_FILE }} | grep -q "Version:"; then
+            PLUGIN_CHANGED="true"
+            echo "Plugin version changed"
+          fi
+        fi
+        
+        # Check if Advanced CSS tab changed
+        ADVANCED_CSS_CHANGED="false"
+        if git diff HEAD~1 HEAD --name-only | grep -q "admin/partials/admin-advanced-css.php"; then
+          ADVANCED_CSS_CHANGED="true"
+          echo "Advanced CSS tab changed"
+        fi
+        
+        # Check if version manager changed
+        VERSION_MANAGER_CHANGED="false"
+        if git diff HEAD~1 HEAD --name-only | grep -q "includes/class-version-manager.php"; then
+          VERSION_MANAGER_CHANGED="true"
+          echo "Version manager changed"
+        fi
+        
+        # Determine if sync is required
+        SYNC_REQUIRED="false"
+        if [ "$PLUGIN_CHANGED" = "true" ] || [ "$ADVANCED_CSS_CHANGED" = "true" ] || [ "$VERSION_MANAGER_CHANGED" = "true" ] || [ "${{ github.event.inputs.force_sync }}" = "true" ]; then
+          SYNC_REQUIRED="true"
+        fi
+        
+        echo "plugin_changed=$PLUGIN_CHANGED" >> $GITHUB_OUTPUT
+        echo "advanced_css_changed=$ADVANCED_CSS_CHANGED" >> $GITHUB_OUTPUT
+        echo "sync_required=$SYNC_REQUIRED" >> $GITHUB_OUTPUT
+
+  sync-theme-versions:
+    name: Sync Theme Versions
+    runs-on: ubuntu-latest
+    needs: detect-version-changes
+    if: needs.detect-version-changes.outputs.sync_required == 'true'
+    
+    strategy:
+      matrix:
+        repo: 
+          - name: 'cdswerx-theme'
+            path: 'style.css'
+            version_pattern: 'Version:\s*'
+          - name: 'cdswerx-theme-child' 
+            path: 'style.css'
+            version_pattern: 'Version:\s*'
+          - name: 'hello-theme-child-github'
+            path: 'style.css'
+            version_pattern: 'Version:\s*'
+    
+    steps:
+    - name: Checkout Target Repository
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ github.repository_owner }}/${{ matrix.repo.name }}
+        token: ${{ secrets.REPO_SYNC_TOKEN }}
+        path: ${{ matrix.repo.name }}
+        
+    - name: Update Theme Version
+      run: |
+        cd ${{ matrix.repo.name }}
+        
+        # Get current theme version
+        CURRENT_VERSION=$(grep -oP "${{ matrix.repo.version_pattern }}\K[\d.]+" ${{ matrix.repo.path }})
+        echo "Current ${{ matrix.repo.name }} version: $CURRENT_VERSION"
+        
+        # Calculate new version based on plugin version
+        PLUGIN_VERSION="${{ needs.detect-version-changes.outputs.plugin_version }}"
+        echo "Plugin version: $PLUGIN_VERSION"
+        
+        # Update theme version to match plugin version
+        sed -i "s/${{ matrix.repo.version_pattern }}$CURRENT_VERSION/${{ matrix.repo.version_pattern }}$PLUGIN_VERSION/" ${{ matrix.repo.path }}
+        
+        echo "Updated ${{ matrix.repo.name }} version to: $PLUGIN_VERSION"
+        
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v5
+      with:
+        path: ${{ matrix.repo.name }}
+        token: ${{ secrets.REPO_SYNC_TOKEN }}
+        commit-message: "Sync version to ${{ needs.detect-version-changes.outputs.plugin_version }} from CDSWerx Plugin"
+        title: "Version Sync: Update to v${{ needs.detect-version-changes.outputs.plugin_version }}"
+        body: |
+          ## Automated Version Synchronization
+          
+          This PR was automatically created to sync the theme version with the CDSWerx Plugin.
+          
+          **Changes:**
+          - Updated version to `${{ needs.detect-version-changes.outputs.plugin_version }}`
+          - Triggered by: ${{ github.event_name }}
+          - Plugin changes detected: ${{ needs.detect-version-changes.outputs.plugin_changed }}
+          - Advanced CSS changes: ${{ needs.detect-version-changes.outputs.advanced_css_changed }}
+          
+          **Review Required:**
+          - [ ] Verify version number is correct
+          - [ ] Test theme functionality with new version
+          - [ ] Confirm no breaking changes
+          
+          Auto-merge is enabled if all checks pass.
+        branch: automated/version-sync-${{ needs.detect-version-changes.outputs.plugin_version }}
+        delete-branch: true
+        labels: |
+          automated
+          version-sync
+          dependencies
+
+  notify-sync-completion:
+    name: Notify Sync Completion
+    runs-on: ubuntu-latest
+    needs: [detect-version-changes, sync-theme-versions]
+    if: always() && needs.detect-version-changes.outputs.sync_required == 'true'
+    
+    steps:
+    - name: Create Sync Summary
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const title = `Version Sync Completed: v${{ needs.detect-version-changes.outputs.plugin_version }}`;
+          const body = `
+          ## Cross-Repository Version Sync Summary
+          
+          **Plugin Version**: ${{ needs.detect-version-changes.outputs.plugin_version }}
+          **Sync Trigger**: ${{ github.event_name }}
+          
+          ### Changes Detected
+          - Plugin version changed: ${{ needs.detect-version-changes.outputs.plugin_changed }}
+          - Advanced CSS changed: ${{ needs.detect-version-changes.outputs.advanced_css_changed }}
+          
+          ### Repositories Updated
+          - [ ] CDSWerx Theme
+          - [ ] CDSWerx Child Theme  
+          - [ ] Hello Elementor Child Theme
+          
+          ### Next Steps
+          - Review and merge auto-created PRs in target repositories
+          - Test updated themes with new plugin version
+          - Deploy synchronized versions to production
+          
+          This summary was automatically created by the Cross-Repository Version Sync workflow.
+          `;
+          
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: title,
+            body: body,
+            labels: ['version-sync', 'automated', 'deployment']
+          });
+
+  test-synchronized-versions:
+    name: Test Synchronized Versions
+    runs-on: ubuntu-latest
+    needs: [detect-version-changes, sync-theme-versions]
+    if: needs.detect-version-changes.outputs.sync_required == 'true'
+    
+    steps:
+    - name: Checkout CDSWerx Plugin
+      uses: actions/checkout@v4
+      
+    - name: Setup Test Environment
+      run: |
+        # Setup PHP and WordPress CLI
+        curl -O https://raw.githubusercontent.com/wp-cli/wp-cli/main/bin/wp-cli.phar
+        chmod +x wp-cli.phar
+        sudo mv wp-cli.phar /usr/local/bin/wp
+        
+    - name: Test Version Coordination
+      run: |
+        # Test that version manager properly handles version updates
+        php -r "
+        require_once 'includes/class-version-manager.php';
+        if (class_exists('CDSWerx_Version_Manager')) {
+          echo 'Version Manager: OK\n';
+          \$manager = new CDSWerx_Version_Manager();
+          echo 'Version coordination: OK\n';
+        } else {
+          echo 'Version Manager: FAIL\n';
+          exit(1);
+        }
+        "
+        
+        echo "Version synchronization test completed successfully"

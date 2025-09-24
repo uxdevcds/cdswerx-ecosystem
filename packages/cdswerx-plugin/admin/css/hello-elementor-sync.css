@@ -1,0 +1,699 @@
+/**
+ * Hello Elementor Sync Administration Styles
+ *
+ * @since      1.0.4
+ * @package    Cdswerx
+ * @subpackage Cdswerx/admin/css
+ */
+
+/* =============================================================================
+   Hello Elementor Sync Dashboard Styles
+   ============================================================================= */
+
+.cdswerx-hello-elementor-dashboard {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    margin: 20px 0;
+    padding: 0;
+}
+
+.cdswerx-dashboard-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #e1e5e9;
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cdswerx-dashboard-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #23282d;
+}
+
+.cdswerx-dashboard-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.cdswerx-dashboard-content {
+    padding: 30px;
+}
+
+/* =============================================================================
+   Status Indicators
+   ============================================================================= */
+
+.cdswerx-status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.cdswerx-status-card {
+    background: #fff;
+    border: 1px solid #e1e5e9;
+    border-radius: 6px;
+    padding: 20px;
+    transition: box-shadow 0.2s ease;
+}
+
+.cdswerx-status-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cdswerx-status-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.cdswerx-status-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.cdswerx-status-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: #23282d;
+    margin: 0;
+}
+
+.cdswerx-status-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.status-active { background-color: #46b450; }
+.status-inactive { background-color: #dc3232; }
+.status-warning { background-color: #ffb900; }
+.status-info { background-color: #00a0d2; }
+
+.cdswerx-status-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cdswerx-status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+}
+
+.cdswerx-status-label {
+    color: #646970;
+}
+
+.cdswerx-status-value {
+    color: #23282d;
+    font-weight: 500;
+}
+
+/* =============================================================================
+   Version Management Section
+   ============================================================================= */
+
+.cdswerx-version-section {
+    background: #f8f9fa;
+    border: 1px solid #e1e5e9;
+    border-radius: 6px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.cdswerx-version-header {
+    display: flex;
+    align-items: center;
+    justify-content: between;
+    margin-bottom: 20px;
+}
+
+.cdswerx-version-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    color: #23282d;
+}
+
+.cdswerx-version-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-left: auto;
+}
+
+.cdswerx-version-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.cdswerx-version-item {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+}
+
+.cdswerx-version-type {
+    font-size: 12px;
+    color: #646970;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+
+.cdswerx-current-version {
+    font-size: 18px;
+    font-weight: 600;
+    color: #23282d;
+    margin-bottom: 8px;
+}
+
+.cdswerx-version-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.cdswerx-version-increment {
+    padding: 4px 8px;
+    font-size: 11px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.increment-patch {
+    background: #e8f5e8;
+    color: #46b450;
+}
+
+.increment-minor {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.increment-major {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.cdswerx-version-increment:hover {
+    opacity: 0.8;
+}
+
+/* =============================================================================
+   Sync Controls
+   ============================================================================= */
+
+.cdswerx-sync-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid #e1e5e9;
+    margin-bottom: 30px;
+}
+
+.cdswerx-sync-mode-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cdswerx-toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.cdswerx-toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.cdswerx-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.3s;
+    border-radius: 24px;
+}
+
+.cdswerx-toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+input:checked + .cdswerx-toggle-slider {
+    background-color: #2196F3;
+}
+
+input:checked + .cdswerx-toggle-slider:before {
+    transform: translateX(26px);
+}
+
+.cdswerx-auto-sync-indicator {
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-weight: 500;
+}
+
+.auto-sync-enabled {
+    background: #e8f5e8;
+    color: #46b450;
+}
+
+.auto-sync-disabled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* =============================================================================
+   Progress Indicators
+   ============================================================================= */
+
+.cdswerx-progress-container {
+    margin: 15px 0;
+}
+
+.cdswerx-progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: #646970;
+}
+
+.cdswerx-progress-bar {
+    width: 100%;
+    height: 6px;
+    background-color: #e1e5e9;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #46b450, #5cbf60);
+    transition: width 0.3s ease;
+}
+
+/* =============================================================================
+   Version History
+   ============================================================================= */
+
+.cdswerx-version-history {
+    background: #fff;
+    border: 1px solid #e1e5e9;
+    border-radius: 6px;
+    margin-top: 20px;
+}
+
+.cdswerx-version-history-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e1e5e9;
+    background: #f8f9fa;
+}
+
+.cdswerx-version-history-title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #23282d;
+}
+
+.cdswerx-version-history-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.version-history-item {
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f0f1;
+    transition: background-color 0.2s ease;
+}
+
+.version-history-item:hover {
+    background-color: #f8f9fa;
+}
+
+.version-history-item:last-child {
+    border-bottom: none;
+}
+
+.version-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.version-type {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: #e8f5e8;
+    color: #46b450;
+    font-weight: 500;
+}
+
+.version-time {
+    font-size: 12px;
+    color: #646970;
+}
+
+.version-details {
+    font-size: 13px;
+    color: #23282d;
+}
+
+.no-history {
+    padding: 30px 20px;
+    text-align: center;
+    color: #646970;
+    font-style: italic;
+}
+
+/* =============================================================================
+   CSS Version Indicator
+   ============================================================================= */
+
+.cdswerx-css-version-section {
+    background: #fff;
+    border: 1px solid #e1e5e9;
+    border-radius: 6px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.cdswerx-css-version-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.version-pending {
+    background: #fff3cd;
+    color: #856404;
+    animation: pulse 2s infinite;
+}
+
+.version-updated {
+    background: #e8f5e8;
+    color: #46b450;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+.cdswerx-css-version-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.cdswerx-css-version-setting {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cdswerx-css-version-setting label {
+    font-size: 13px;
+    color: #23282d;
+}
+
+/* =============================================================================
+   Notifications
+   ============================================================================= */
+
+.cdswerx-admin-notices {
+    position: fixed;
+    top: 32px;
+    right: 20px;
+    z-index: 100000;
+    max-width: 400px;
+}
+
+.cdswerx-update-notification {
+    background: #fff;
+    border-left: 4px solid #00a0d2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    margin-bottom: 10px;
+    padding: 15px 20px;
+    border-radius: 4px;
+}
+
+.cdswerx-update-notification.hidden {
+    display: none;
+}
+
+.update-list {
+    margin-top: 10px;
+}
+
+.update-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f1;
+}
+
+.update-item:last-child {
+    border-bottom: none;
+}
+
+.apply-update {
+    font-size: 11px;
+    padding: 4px 8px;
+}
+
+/* =============================================================================
+   Tab Navigation
+   ============================================================================= */
+
+.cdswerx-tab-nav {
+    border-bottom: 1px solid #ccd0d4;
+    margin-bottom: 20px;
+}
+
+.cdswerx-tab-nav a {
+    display: inline-block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #646970;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.cdswerx-tab-nav a:hover {
+    color: #135e96;
+}
+
+.cdswerx-tab-nav a.nav-tab-active {
+    color: #135e96;
+    border-bottom-color: #135e96;
+}
+
+.cdswerx-tab-content {
+    display: none;
+}
+
+.cdswerx-tab-content.active {
+    display: block;
+}
+
+/* =============================================================================
+   Responsive Design
+   ============================================================================= */
+
+@media (max-width: 1200px) {
+    .cdswerx-status-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .cdswerx-version-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .cdswerx-dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .cdswerx-dashboard-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    
+    .cdswerx-status-grid,
+    .cdswerx-version-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .cdswerx-sync-controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .cdswerx-css-version-controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .cdswerx-admin-notices {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+}
+
+/* =============================================================================
+   Button Enhancements
+   ============================================================================= */
+
+.cdswerx-button-sync {
+    background: #2196F3;
+    border-color: #1976D2;
+    color: #fff;
+}
+
+.cdswerx-button-sync:hover {
+    background: #1976D2;
+    border-color: #1565C0;
+}
+
+.cdswerx-button-danger {
+    background: #dc3232;
+    border-color: #b71c1c;
+    color: #fff;
+}
+
+.cdswerx-button-danger:hover {
+    background: #b71c1c;
+    border-color: #8e0000;
+}
+
+.cdswerx-button-success {
+    background: #46b450;
+    border-color: #2e7d32;
+    color: #fff;
+}
+
+.cdswerx-button-success:hover {
+    background: #2e7d32;
+    border-color: #1b5e20;
+}
+
+/* =============================================================================
+   Tooltips
+   ============================================================================= */
+
+.cdswerx-tooltip {
+    position: relative;
+    cursor: help;
+}
+
+.cdswerx-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #23282d;
+    color: #fff;
+    padding: 5px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 1000;
+}
+
+.cdswerx-tooltip:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* =============================================================================
+   Loading States
+   ============================================================================= */
+
+.cdswerx-loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.cdswerx-loading::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #2196F3;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 1001;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

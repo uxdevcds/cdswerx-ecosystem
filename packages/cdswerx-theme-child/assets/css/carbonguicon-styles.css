@@ -1,0 +1,76 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: "carbon-gui";
+  src:url("../fonts/carbon-gui.eot");
+  src:url("../fonts/carbon-gui.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/carbon-gui.woff") format("woff"),
+    url("../fonts/carbon-gui.ttf") format("truetype"),
+    url("../fonts/carbon-gui.svg#carbon-gui") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+[data-icon]:before {
+  font-family: "carbon-gui" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="guicons-"]:before,
+[class*=" guicons-"]:before {
+  font-family: "carbon-gui" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.guicons-alarm-clock:before {
+  content: "\61";
+}
+.guicons-calendar:before {
+  content: "\62";
+}
+.guicons-share:before {
+  content: "\63";
+}
+.guicons-phone-call:before {
+  content: "\64";
+}
+.guicons-paper-plane-message:before {
+  content: "\65";
+}
+.guicons-news-newspaper:before {
+  content: "\66";
+}
+.guicons-new-label:before {
+  content: "\67";
+}
+.guicons-mail:before {
+  content: "\68";
+}
+.guicons-faq:before {
+  content: "\69";
+}
+.guicons-location:before {
+  content: "\6a";
+}
+.guicons-clock:before {
+  content: "\6b";
+}
+.guicons-calendar-planning:before {
+  content: "\6c";
+}

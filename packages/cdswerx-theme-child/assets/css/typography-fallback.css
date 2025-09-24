@@ -1,0 +1,42 @@
+/*
+ * CDSWerx Typography Fallback CSS
+ * Auto-generated from plugin typography rules
+ * Preserves typography when CDSWerx plugin is inactive
+ * Generated: 2025-09-24 22:04:44
+ */
+
+.xlight,
+h1.xlight,
+h2.xlight,
+h3.xlight,
+h4.xlight,
+h5.xlight,
+h6.xlight,
+body.xlight,
+p.xlight {
+    font-weight: 200;
+}
+
+.lg,
+body.lg,
+p.lg,
+p.lg a {
+    font-size: 1.8rem;
+    line-height: 1.65em;
+    letter-spacing: -0.125px;
+    /*  padding: 1em 0;*/
+}
+
+.sm {
+    font-size: 2em;
+    line-height: 1.2;
+}
+
+.xs,
+body.xs,
+p.xs,
+p.xs a {
+    font-size: 1.2rem;
+    line-height: 1.5em;
+}
+

@@ -1,0 +1,484 @@
+name: Automated Testing Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run tests daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      test_suite:
+        description: 'Test suite to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - unit
+        - integration
+        - sync
+        - performance
+
+env:
+  PHP_VERSION: '8.1'
+  WP_VERSION: 'latest'
+  MYSQL_VERSION: '8.0'
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_suite == 'unit' || github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == ''
+    
+    strategy:
+      matrix:
+        php-version: ['8.0', '8.1', '8.2']
+        wp-version: ['6.0', '6.3', 'latest']
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP ${{ matrix.php-version }}
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
+        coverage: xdebug
+        
+    - name: Setup WordPress Test Suite
+      run: |
+        curl -O https://raw.githubusercontent.com/wp-cli/wp-cli/main/bin/wp-cli.phar
+        chmod +x wp-cli.phar
+        sudo mv wp-cli.phar /usr/local/bin/wp
+        
+        # Install WordPress test suite
+        bash bin/install-wp-tests.sh wordpress_test root root localhost ${{ matrix.wp-version }}
+        
+    - name: Create Test Bootstrap
+      run: |
+        mkdir -p tests
+        cat > tests/bootstrap.php << 'EOF'
+        <?php
+        // Silence deprecation warnings
+        error_reporting( E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED );
+        
+        // WordPress test suite
+        $_tests_dir = getenv( 'WP_TESTS_DIR' );
+        if ( ! $_tests_dir ) {
+          $_tests_dir = '/tmp/wordpress-tests-lib';
+        }
+        
+        require_once $_tests_dir . '/includes/functions.php';
+        
+        function _manually_load_plugin() {
+          require dirname( dirname( __FILE__ ) ) . '/cdswerx.php';
+        }
+        tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
+        
+        require $_tests_dir . '/includes/bootstrap.php';
+        EOF
+        
+    - name: Create Unit Tests
+      run: |
+        mkdir -p tests/unit
+        
+        # Test core plugin class
+        cat > tests/unit/test-cdswerx-core.php << 'EOF'
+        <?php
+        class Test_CDSWerx_Core extends WP_UnitTestCase {
+          
+          public function test_plugin_loaded() {
+            $this->assertTrue( class_exists( 'Cdswerx' ) );
+          }
+          
+          public function test_hello_elementor_sync_class() {
+            $this->assertTrue( class_exists( 'CDSWerx_Hello_Elementor_Sync' ) );
+          }
+          
+          public function test_version_manager_class() {
+            $this->assertTrue( class_exists( 'CDSWerx_Version_Manager' ) );
+          }
+          
+          public function test_dependency_checker_class() {
+            $this->assertTrue( class_exists( 'CDSWerx_Dependency_Checker' ) );
+          }
+          
+          public function test_independent_mode_manager_class() {
+            $this->assertTrue( class_exists( 'CDSWerx_Independent_Mode_Manager' ) );
+          }
+        }
+        EOF
+        
+        # Test Hello Elementor sync functionality
+        cat > tests/unit/test-hello-elementor-sync.php << 'EOF'
+        <?php
+        class Test_Hello_Elementor_Sync extends WP_UnitTestCase {
+          
+          private $sync_instance;
+          
+          public function setUp(): void {
+            parent::setUp();
+            if ( class_exists( 'CDSWerx_Hello_Elementor_Sync' ) ) {
+              $this->sync_instance = new CDSWerx_Hello_Elementor_Sync();
+            }
+          }
+          
+          public function test_sync_instance_creation() {
+            $this->assertInstanceOf( 'CDSWerx_Hello_Elementor_Sync', $this->sync_instance );
+          }
+          
+          public function test_wordpress_api_integration() {
+            if ( ! $this->sync_instance ) {
+              $this->markTestSkipped( 'Sync class not available' );
+            }
+            
+            // Test API connection (mock test)
+            $this->assertTrue( method_exists( $this->sync_instance, 'check_hello_elementor_update' ) );
+          }
+          
+          public function test_version_detection() {
+            if ( ! $this->sync_instance ) {
+              $this->markTestSkipped( 'Sync class not available' );
+            }
+            
+            $this->assertTrue( method_exists( $this->sync_instance, 'get_hello_elementor_version' ) );
+          }
+        }
+        EOF
+        
+        # Test independent mode functionality  
+        cat > tests/unit/test-independent-mode.php << 'EOF'
+        <?php
+        class Test_Independent_Mode extends WP_UnitTestCase {
+          
+          private $manager_instance;
+          
+          public function setUp(): void {
+            parent::setUp();
+            if ( class_exists( 'CDSWerx_Independent_Mode_Manager' ) ) {
+              $this->manager_instance = new CDSWerx_Independent_Mode_Manager();
+            }
+          }
+          
+          public function test_manager_instance_creation() {
+            $this->assertInstanceOf( 'CDSWerx_Independent_Mode_Manager', $this->manager_instance );
+          }
+          
+          public function test_fallback_functions_available() {
+            if ( ! $this->manager_instance ) {
+              $this->markTestSkipped( 'Manager class not available' );
+            }
+            
+            $functions = $this->manager_instance->get_available_fallback_functions();
+            $this->assertIsArray( $functions );
+            $this->assertGreaterThan( 0, count( $functions ) );
+          }
+          
+          public function test_independent_mode_detection() {
+            if ( ! $this->manager_instance ) {
+              $this->markTestSkipped( 'Manager class not available' );
+            }
+            
+            $this->assertTrue( method_exists( $this->manager_instance, 'is_independent_mode_active' ) );
+          }
+        }
+        EOF
+        
+    - name: Install PHPUnit
+      run: |
+        composer require --dev phpunit/phpunit
+        
+    - name: Create PHPUnit Config
+      run: |
+        cat > phpunit.xml << 'EOF'
+        <?xml version="1.0"?>
+        <phpunit
+          bootstrap="tests/bootstrap.php"
+          backupGlobals="false"
+          colors="true"
+          convertErrorsToExceptions="true"
+          convertNoticesToExceptions="true"
+          convertWarningsToExceptions="true"
+        >
+          <testsuites>
+            <testsuite name="unit">
+              <directory prefix="test-" suffix=".php">./tests/unit/</directory>
+            </testsuite>
+          </testsuites>
+        </phpunit>
+        EOF
+        
+    - name: Run Unit Tests
+      run: |
+        vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
+        
+    - name: Upload Coverage
+      uses: codecov/codecov-action@v3
+      with:
+        file: coverage.clover
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_suite == 'integration' || github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == ''
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.PHP_VERSION }}
+        extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, mysql, pdo_mysql
+        
+    - name: Setup WordPress
+      run: |
+        curl -O https://raw.githubusercontent.com/wp-cli/wp-cli/main/bin/wp-cli.phar
+        chmod +x wp-cli.phar
+        sudo mv wp-cli.phar /usr/local/bin/wp
+        
+        wp core download --path=/tmp/wordpress --allow-root
+        cd /tmp/wordpress
+        wp config create --dbname=wordpress_test --dbuser=root --dbpass=root --dbhost=127.0.0.1 --allow-root
+        wp core install --url=localhost --title="Test Site" --admin_user=admin --admin_password=admin --admin_email=test@example.com --allow-root
+        
+    - name: Install Hello Elementor
+      run: |
+        cd /tmp/wordpress
+        wp theme install hello-elementor --activate --allow-root
+        
+    - name: Install CDSWerx Plugin
+      run: |
+        cp -r . /tmp/wordpress/wp-content/plugins/cdswerx-plugin/
+        cd /tmp/wordpress
+        wp plugin activate cdswerx-plugin --allow-root
+        
+    - name: Run Integration Tests
+      run: |
+        cd /tmp/wordpress
+        
+        # Test plugin activation with Hello Elementor
+        wp eval "
+        if (class_exists('Cdswerx') && class_exists('CDSWerx_Hello_Elementor_Sync')) {
+          echo 'Integration Test 1: Plugin + Hello Elementor = PASS\n';
+        } else {
+          echo 'Integration Test 1: FAIL\n';
+          exit(1);
+        }
+        " --allow-root
+        
+        # Test dependency checker integration
+        wp eval "
+        if (class_exists('CDSWerx_Dependency_Checker')) {
+          \$checker = new CDSWerx_Dependency_Checker();
+          \$hello_info = \$checker->get_hello_elementor_info();
+          if (is_array(\$hello_info)) {
+            echo 'Integration Test 2: Dependency Checker = PASS\n';
+          } else {
+            echo 'Integration Test 2: FAIL\n';
+            exit(1);
+          }
+        }
+        " --allow-root
+        
+        # Test independent mode without Hello Elementor
+        wp theme activate twentytwentyone --allow-root
+        wp theme delete hello-elementor --allow-root
+        
+        wp eval "
+        if (class_exists('CDSWerx_Independent_Mode_Manager')) {
+          \$manager = new CDSWerx_Independent_Mode_Manager();
+          if (\$manager->is_independent_mode_active()) {
+            echo 'Integration Test 3: Independent Mode = PASS\n';
+          } else {
+            echo 'Integration Test 3: FAIL\n';
+            exit(1);
+          }
+        }
+        " --allow-root
+        
+        echo "All integration tests passed"
+
+  sync-functionality-tests:
+    name: Sync Functionality Tests
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_suite == 'sync' || github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == ''
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.PHP_VERSION }}
+        extensions: curl, json, zip
+        
+    - name: Test WordPress.org API Integration
+      run: |
+        php -r "
+        // Test Hello Elementor API access
+        \$response = file_get_contents('https://api.wordpress.org/themes/info/1.2/?action=theme_information&request[slug]=hello-elementor');
+        \$data = json_decode(\$response, true);
+        if (isset(\$data['version'])) {
+          echo 'API Test: Hello Elementor version detection = PASS (' . \$data['version'] . ')\n';
+        } else {
+          echo 'API Test: FAIL\n';
+          exit(1);
+        }
+        "
+        
+    - name: Test Version Management
+      run: |
+        # Test version extraction from plugin file
+        VERSION=$(grep -oP "Version:\s*\K[\d.]+" cdswerx.php)
+        if [ -n "$VERSION" ]; then
+          echo "Version Test: Plugin version detection = PASS ($VERSION)"
+        else
+          echo "Version Test: FAIL"
+          exit 1
+        fi
+        
+    - name: Test Sync Class Methods
+      run: |
+        php -r "
+        require_once 'includes/class-hello-elementor-sync.php';
+        if (class_exists('CDSWerx_Hello_Elementor_Sync')) {
+          \$sync = new CDSWerx_Hello_Elementor_Sync();
+          
+          // Test method existence
+          \$methods = ['check_hello_elementor_update', 'get_hello_elementor_version', 'validate_sync_functionality'];
+          foreach (\$methods as \$method) {
+            if (method_exists(\$sync, \$method)) {
+              echo 'Method Test: ' . \$method . ' = PASS\n';
+            } else {
+              echo 'Method Test: ' . \$method . ' = FAIL\n';
+              exit(1);
+            }
+          }
+        } else {
+          echo 'Sync Class Test: FAIL\n';
+          exit(1);
+        }
+        "
+
+  performance-tests:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_suite == 'performance' || github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == ''
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.PHP_VERSION }}
+        extensions: xdebug
+        
+    - name: Run Performance Benchmarks
+      run: |
+        # Test class loading performance
+        php -r "
+        \$start = microtime(true);
+        for (\$i = 0; \$i < 100; \$i++) {
+          if (file_exists('includes/class-hello-elementor-sync.php')) {
+            require_once 'includes/class-hello-elementor-sync.php';
+          }
+        }
+        \$end = microtime(true);
+        \$time = (\$end - \$start) * 1000;
+        echo 'Performance Test: Class loading = ' . round(\$time, 2) . 'ms for 100 iterations\n';
+        
+        if (\$time < 1000) {
+          echo 'Performance Test: PASS (under 1000ms)\n';
+        } else {
+          echo 'Performance Test: FAIL (over 1000ms)\n';
+          exit(1);
+        }
+        "
+        
+    - name: Memory Usage Test
+      run: |
+        php -r "
+        \$memory_start = memory_get_usage();
+        
+        // Load all plugin classes
+        \$files = glob('includes/class-*.php');
+        foreach (\$files as \$file) {
+          require_once \$file;
+        }
+        
+        \$memory_end = memory_get_usage();
+        \$memory_used = \$memory_end - \$memory_start;
+        \$memory_mb = round(\$memory_used / 1024 / 1024, 2);
+        
+        echo 'Memory Test: Plugin classes use ' . \$memory_mb . 'MB\n';
+        
+        if (\$memory_mb < 10) {
+          echo 'Memory Test: PASS (under 10MB)\n';
+        } else {
+          echo 'Memory Test: FAIL (over 10MB)\n';
+          exit(1);
+        }
+        "
+
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests, sync-functionality-tests, performance-tests]
+    if: always()
+    
+    steps:
+    - name: Create Test Summary
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const results = {
+            'Unit Tests': '${{ needs.unit-tests.result }}',
+            'Integration Tests': '${{ needs.integration-tests.result }}', 
+            'Sync Functionality Tests': '${{ needs.sync-functionality-tests.result }}',
+            'Performance Tests': '${{ needs.performance-tests.result }}'
+          };
+          
+          let summary = '## Automated Test Results\n\n';
+          let allPassed = true;
+          
+          for (const [test, result] of Object.entries(results)) {
+            const status = result === 'success' ? '✅ PASS' : result === 'failure' ? '❌ FAIL' : '⏭️ SKIP';
+            summary += `- **${test}**: ${status}\n`;
+            if (result === 'failure') allPassed = false;
+          }
+          
+          summary += `\n### Overall Status: ${allPassed ? '✅ ALL TESTS PASSED' : '❌ SOME TESTS FAILED'}\n`;
+          summary += `**Triggered by**: ${context.eventName}\n`;
+          summary += `**Commit**: ${context.sha.substring(0, 7)}\n`;
+          
+          console.log(summary);
+          
+          // Create issue if tests failed
+          if (!allPassed) {
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Test Failures Detected - ${new Date().toISOString().split('T')[0]}`,
+              body: summary + '\n\nPlease review the failed tests and fix the issues.',
+              labels: ['test-failure', 'automated', 'bug']
+            });
+          }

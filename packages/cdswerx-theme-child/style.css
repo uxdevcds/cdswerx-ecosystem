@@ -1,0 +1,16 @@
+/*
+Theme Name: CDSWerx Theme Child
+Description: Child theme for CDSWerx Theme with integrated asset management and CDSWerx plugin ecosystem support
+Author: CDSWerx Team  
+Author URI: https://cdswerx.com/
+Template: cdswerx-theme
+Version: 1.1.0
+Text Domain: cdswerx-theme-child
+License: GNU General Public License v3 or later.
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
+*/
+
+/* Import parent theme styles */
+@import url("../cdswerx-theme/style.css");
+
+/* Add your custom styles below this line */

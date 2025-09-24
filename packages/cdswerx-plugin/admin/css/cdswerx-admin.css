@@ -1,0 +1,663 @@
+/**
+ * All of the CSS for your admin-specific functionality should be
+ * included in this file.
+ */
+/* Self-hosted Metropolis font (woff2/woff/ttf fallback) */
+
+/* Light 300 */
+@font-face {
+    font-family: "Metropolis";
+    src:
+        url("../../assets/fonts/Metropolis-Light.woff2") format("woff2"),
+        url("../../assets/fonts/Metropolis-Light.woff") format("woff"),
+        url("../../assets/fonts/Metropolis-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Metropolis";
+    src:
+        url("../../assets/fonts/Metropolis-LightItalic.woff2") format("woff2"),
+        url("../../assets/fonts/Metropolis-LightItalic.woff") format("woff"),
+        url("../../assets/fonts/Metropolis-LightItalic.ttf") format("truetype");
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* Regular 400 */
+@font-face {
+    font-family: "Metropolis";
+    src:
+        url("../../assets/fonts/Metropolis-Regular.woff2") format("woff2"),
+        url("../../assets/fonts/Metropolis-Regular.woff") format("woff"),
+        url("../../assets/fonts/Metropolis-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Metropolis";
+    src:
+        url("../../assets/fonts/Metropolis-RegularItalic.woff2") format("woff2"),
+        url("../../assets/fonts/Metropolis-RegularItalic.woff") format("woff"),
+        url("../../assets/fonts/Metropolis-RegularItalic.ttf") format("truetype");
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* SemiBold 600 */
+@font-face {
+    font-family: "Metropolis";
+    src:
+        url("../../assets/fonts/Metropolis-SemiBold.woff2") format("woff2"),
+        url("../../assets/fonts/Metropolis-SemiBold.woff") format("woff"),
+        url("../../assets/fonts/Metropolis-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Metropolis";
+    src:
+        url("../../assets/fonts/Metropolis-SemiBoldItalic.woff2") format("woff2"),
+        url("../../assets/fonts/Metropolis-SemiBoldItalic.woff") format("woff"),
+        url("../../assets/fonts/Metropolis-SemiBoldItalic.ttf") format("truetype");
+    font-weight: 600;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* Bold 700 */
+@font-face {
+    font-family: "Metropolis";
+    src:
+        url("../../assets/fonts/Metropolis-Bold.woff2") format("woff2"),
+        url("../../assets/fonts/Metropolis-Bold.woff") format("woff"),
+        url("../../assets/fonts/Metropolis-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Metropolis";
+    src:
+        url("../../assets/fonts/Metropolis-BoldItalic.woff2") format("woff2"),
+        url("../../assets/fonts/Metropolis-BoldItalic.woff") format("woff"),
+        url("../../assets/fonts/Metropolis-BoldItalic.ttf") format("truetype");
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* ExtraBold 800 */
+@font-face {
+    font-family: "Metropolis";
+    src:
+        url("../../assets/fonts/Metropolis-ExtraBold.woff2") format("woff2"),
+        url("../../assets/fonts/Metropolis-ExtraBold.woff") format("woff"),
+        url("../../assets/fonts/Metropolis-ExtraBold.ttf") format("truetype");
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Metropolis";
+    src:
+        url("../../assets/fonts/Metropolis-ExtraBoldItalic.woff2") format("woff2"),
+        url("../../assets/fonts/Metropolis-ExtraBoldItalic.woff") format("woff"),
+        url("../../assets/fonts/Metropolis-ExtraBoldItalic.ttf") format("truetype");
+    font-weight: 800;
+    font-style: italic;
+    font-display: swap;
+}
+
+#wpwrap {
+    background: inherit !important;
+    /*prevents uikit styles from overriding wp's default*/
+    min-height: auto !important;
+}
+
+body #admin-dashboard *,
+body #admin-users-settings *,
+body #admin-extensions *,
+body #admin-customizations * {
+    font-family: "Metropolis", Arial, Helvetica, sans-serif;
+}
+
+.cdswerx-wrap {
+    min-height: calc(100vh - 160px);
+    /* Adjust value as needed */
+    margin: 30px 30px 0 10px;
+    position: relative;
+}
+
+.cdswerx-logo {
+    height: 4em;
+    width: auto;
+    display: block;
+}
+
+.cdswerx-admin-wrapper {
+    margin: 20px 0;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+@media screen and (max-width: 999px) {
+    .cdswerx-admin.page-header .uk-flex {
+        flex-direction: column-reverse;
+    }
+
+    .cdswerx-admin.page-header .uk-flex>h1 {
+        margin-top: 20px;
+    }
+
+    .cdswerx-logo {
+        height: 2.5em;
+    }
+}
+
+#admin-dashboard .cdswerx-admin.page-header h1 {
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.cdswerx-admin-header {
+    border-bottom: 1px solid #e1e1e1;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.cdswerx-admin-header h1 {
+    color: #23282d;
+    font-size: 1.3em;
+    margin: 0;
+    font-weight: 600;
+}
+
+.cdswerx-admin-header p {
+    color: #666;
+    margin: 5px 0 0;
+}
+
+.cdswerx-description {
+    color: #666;
+    font-style: italic;
+    margin-top: 5px;
+    font-size: 13px;
+}
+
+/*Style for the activation prompt notice outside of CDSWerx pages*/
+.cdswerx-button-primary,
+.notice.cdswerx-activation-prompt .cdswerx-button-primary,
+.cdswerx-tab-content .uk-button-primary {
+    margin: 0;
+    border: 1px solid #007cba;
+    background: #007cba;
+    overflow: visible;
+    font: inherit;
+    color: #fff;
+    text-transform: none;
+    -webkit-appearance: none;
+    border-radius: 0;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0 30px;
+    vertical-align: middle;
+    font-size: 14px;
+    line-height: 38px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: 0.1s ease-in-out;
+    transition-property: color, background-color, border-color;
+    min-height: 30px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.cdswerx-button-primary:hover,
+.notice.cdswerx-activation-prompt .cdswerx-button-primary:hover {
+    background: #005a87;
+    border-color: #005a87;
+}
+
+.cdswerx-notice {
+    padding: 12px;
+    margin: 5px 0 15px;
+    background: #fff;
+    border-left: 4px solid #00a0d2;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.cdswerx-notice.notice-success {
+    border-left-color: #46b450;
+}
+
+.cdswerx-notice.notice-error {
+    border-left-color: #dc3232;
+}
+
+.cdswerx-notice.notice-warning {
+    border-left-color: #ffb900;
+}
+
+.cdswerx-tabs {
+    margin: 0 0 20px;
+}
+
+.cdswerx-tabs ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-bottom: 1px solid #ccd0d4;
+}
+
+.cdswerx-tabs li {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+.cdswerx-tabs a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #0073aa;
+    border-bottom: 2px solid transparent;
+}
+
+.cdswerx-tabs a:hover,
+.cdswerx-tabs a.active {
+    color: #0073aa;
+    border-bottom-color: #0073aa;
+}
+
+.cdswerx-tab-content {
+    padding: 20px 0;
+}
+
+/* Custom Code Tab Specific Styles - Only affect custom code tabs */
+.cdswerx-code-tabs .cdswerx-tab-content {
+    display: none;
+}
+
+.cdswerx-code-tabs .cdswerx-tab-content.active {
+    display: block;
+}
+
+/* Custom Code Tab Styles - Match existing tab structure */
+.cdswerx-code-tabs {
+    margin: 0 0 20px;
+}
+
+.cdswerx-tab-nav {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-bottom: 1px solid #ccd0d4;
+}
+
+.cdswerx-tab-nav li {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+.cdswerx-tab-nav a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #0073aa;
+    border-bottom: 2px solid transparent;
+}
+
+.cdswerx-tab-nav a:hover,
+.cdswerx-tab-nav a.active {
+    color: #0073aa;
+    border-bottom-color: #0073aa;
+}
+
+/* Custom code tabs are now working - debug CSS removed */
+
+.cdswerx-settings-group {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.cdswerx-settings-group:last-child {
+    border-bottom: none;
+}
+
+.cdswerx-settings-group h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #23282d;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.cdswerx-admin.page-footer p.uk-text-small {
+    font-size: 12px;
+    letter-spacing: 0.15px;
+}
+
+/*override uikits styles*.cdswerx-admin-header*/
+
+.cdswerx-tab-content .uk-label {
+    border-radius: 0;
+    background: transparent;
+}
+
+.cdswerx-tab-content .uk-label.uk-label-success {
+    color: #46b450;
+}
+
+.cdswerx-tab-content .uk-label.uk-label-danger {
+    color: #dc3232;
+}
+
+.cdswerx-tab-content .uk-label.uk-label-warning {
+    color: #ffb900;
+}
+
+/* Hide all admin notices not related to CDS except errors and warnings on CDSWerx pages */
+body .notice:not(.notice-error):not(.notice-warning):not(.cdswerx-wrap .notice):not(.cdswerx-activation-prompt),
+body .update-nag:not(.cdswerx-wrap .update-nag),
+body .notice-info:not(.cdswerx-wrap .notice-info):not(.cdswerx-activation-prompt),
+body .notice-success:not(.cdswerx-wrap .notice-success):not(.cdswerx-activation-prompt) {
+    display: none !important;
+}
+
+/* Ensure CDSWerx activation prompt is always visible */
+.notice.cdswerx-activation-prompt {
+    display: block !important;
+}
+
+/*Use Settings Table Formatting*/
+.user-grid-container {
+    display: grid;
+    gap: 0;
+    overflow: hidden;
+}
+
+/*Switcher Toggle Style*/
+.switch-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 28px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #eee;
+    border-radius: 34px;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "OFF";
+    height: 24px;
+    width: 24px;
+    left: 2px;
+    bottom: 2px;
+    background-color: #fff;
+    color: #888;
+    border-radius: 50%;
+    line-height: 24px;
+    text-align: center;
+    font-size: 10px;
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: #4CAF50;
+}
+
+input:checked+.slider:before {
+    transform: translateX(32px);
+    content: "ON";
+    color: #888;
+    background-color: #fff;
+}
+
+/* Desktop Grid Layout */
+@media (min-width: 960px) {
+    .user-grid-container.users-settings {
+        grid-template-columns: auto auto 1fr auto;
+    }
+
+    .user-grid-container {
+        /* Update grid columns to prioritize description width */
+        grid-template-columns: 20% 50% 15% 15%;
+    }
+
+    .user-grid-header {
+        display: contents;
+    }
+
+    .user-grid-header>div {
+        background: #f8f8f8;
+        padding: 12px 30px;
+        font-weight: 600;
+        border-bottom: 1px solid #e5e5e5;
+        white-space: nowrap;
+    }
+
+    .user-grid-row {
+        display: contents;
+    }
+
+    .user-grid-row>div {
+        padding: 12px 30px;
+        border-bottom: 1px solid #e5e5e5;
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .user-grid-row:hover>div {
+        background: none !important;
+    }
+
+    .user-grid-row.muted>div {
+        background: #f8f8f8;
+    }
+
+    .user-grid-cell-status,
+    .user-grid-cell-user,
+    .user-grid-cell-actions {
+        white-space: nowrap;
+    }
+
+    .mobile-label {
+        display: none;
+    }
+}
+
+/* Mobile Stacked Layout */
+@media (max-width: 959px) {
+    .user-grid-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        border: none;
+        background: transparent;
+    }
+
+    .user-grid-header {
+        display: none;
+    }
+
+    .user-grid-row {
+        display: block;
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        padding: 20px;
+    }
+
+    .user-grid-row.muted {
+        background: #f8f8f8;
+    }
+
+    .user-grid-row>div {
+        display: block;
+        margin-bottom: 15px;
+        padding: 0;
+    }
+
+    .user-grid-row>div:last-child {
+        margin-bottom: 0;
+    }
+
+    .mobile-label {
+        display: inline-block;
+        font-weight: 600;
+        margin-right: 10px;
+        min-width: 120px;
+    }
+
+    .mobile-value {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .user-grid-cell-user .mobile-value {
+        display: block;
+    }
+}
+
+/* Monaco Editor Integration Styles */
+.cdswerx-monaco-container {
+    width: 100%;
+    height: 400px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #f9f9f9;
+    position: relative;
+}
+
+.cdswerx-monaco-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f1f1f1;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    padding: 8px 12px;
+    border-radius: 4px 4px 0 0;
+}
+
+.cdswerx-monaco-toolbar .button {
+    margin-right: 10px;
+    font-size: 12px;
+    height: 28px;
+    line-height: 26px;
+    padding: 0 8px;
+}
+
+.cdswerx-editor-info {
+    color: #666;
+    font-size: 12px;
+    margin-left: auto;
+}
+
+.cdswerx-code-editor-hidden {
+    display: none !important;
+}
+
+.cdswerx-monaco-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #666;
+    font-size: 14px;
+}
+
+.cdswerx-monaco-loading:before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #ccc;
+    border-top: 2px solid #0073aa;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Monaco Editor theme adjustments */
+.monaco-editor {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+}
+
+.monaco-editor .margin {
+    background-color: #f8f8f8 !important;
+}
+
+/* Enhanced code editor wrapper */
+.cdswerx-code-editor-wrapper {
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 0 0 4px 4px;
+    overflow: hidden;
+}
+
+.cdswerx-code-editor-wrapper .cdswerx-monaco-container {
+    border: none;
+    border-radius: 0;
+}
+
+/* Error handling for Monaco loading */
+.cdswerx-monaco-error {
+    background: #ffebee;
+    border: 1px solid #f44336;
+    color: #c62828;
+    padding: 15px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.cdswerx-monaco-error .button {
+    margin-top: 10px;
+}

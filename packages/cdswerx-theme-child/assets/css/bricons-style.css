@@ -1,0 +1,265 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: "brands-social";
+  src:url("../fonts/brands-social.eotbrands-social.eot");
+  src:url("../fonts/brands-social.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/brands-social.woff") format("woff"),
+    url("../fonts/brands-social.ttf") format("truetype"),
+    url("../fonts/brands-social.svg#brands-social") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+[data-icon]:before {
+  font-family: "brands-social" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="bricons-"]:before,
+[class*=" bricons-"]:before {
+  font-family: "brands-social" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.bricons-sq-yahoo:before {
+  content: "\62";
+}
+.bricons-sq-yelp:before {
+  content: "\63";
+}
+.bricons-sq-facebook-2:before {
+  content: "\64";
+}
+.bricons-sq-fb-messenger:before {
+  content: "\65";
+}
+.bricons-sq-yelp-full:before {
+  content: "\66";
+}
+.bricons-sq-youtube:before {
+  content: "\67";
+}
+.bricons-sq-google:before {
+  content: "\68";
+}
+.bricons-sq-google-drive:before {
+  content: "\69";
+}
+.bricons-sq-youtube-d:before {
+  content: "\6a";
+}
+.bricons-sq-google-plus:before {
+  content: "\6b";
+}
+.bricons-sq-instagram:before {
+  content: "\6d";
+}
+.bricons-sq-linkedin:before {
+  content: "\6e";
+}
+.bricons-sq-twitter:before {
+  content: "\6f";
+}
+.bricons-sq-vimeo:before {
+  content: "\70";
+}
+.bricons-sq-wechat:before {
+  content: "\71";
+}
+.bricons-sq-whatsapp:before {
+  content: "\72";
+}
+.bricons-squircle-whatsapp:before {
+  content: "\73";
+}
+.bricons-squircle-wechat:before {
+  content: "\74";
+}
+.bricons-squircle-vimeo:before {
+  content: "\75";
+}
+.bricons-squircle-twitter:before {
+  content: "\76";
+}
+.bricons-squircle-linkedin:before {
+  content: "\77";
+}
+.bricons-squircle-instagram:before {
+  content: "\78";
+}
+.bricons-squircle-google-plus:before {
+  content: "\7a";
+}
+.bricons-squircle-google-drive:before {
+  content: "\41";
+}
+.bricons-squircle-google:before {
+  content: "\42";
+}
+.bricons-squircle-fb-messenger:before {
+  content: "\43";
+}
+.bricons-squircle-facebook-2:before {
+  content: "\44";
+}
+.bricons-squircle-facebook-1:before {
+  content: "\45";
+}
+.bricons-squircle-yahoo:before {
+  content: "\46";
+}
+.bricons-squircle-yelp:before {
+  content: "\47";
+}
+.bricons-squircle-yelp-full:before {
+  content: "\48";
+}
+.bricons-squircle-youtube:before {
+  content: "\49";
+}
+.bricons-squircle-youtube-d:before {
+  content: "\4a";
+}
+.bricons-circle-wechat:before {
+  content: "\4b";
+}
+.bricons-circle-vimeo:before {
+  content: "\4c";
+}
+.bricons-circle-twitter:before {
+  content: "\4d";
+}
+.bricons-circle-linkedin-2:before {
+  content: "\4e";
+}
+.bricons-circle-instagram:before {
+  content: "\4f";
+}
+.bricons-circle-linkedin-1:before {
+  content: "\50";
+}
+.bricons-circle-google-plus:before {
+  content: "\52";
+}
+.bricons-circle-google-drive:before {
+  content: "\53";
+}
+.bricons-circle-google:before {
+  content: "\54";
+}
+.bricons-circle-fb-messenger:before {
+  content: "\55";
+}
+.bricons-circle-facebook-2:before {
+  content: "\56";
+}
+.bricons-circle-facebook-1:before {
+  content: "\57";
+}
+.bricons-circle-whatsapp:before {
+  content: "\58";
+}
+.bricons-circle-yahoo:before {
+  content: "\59";
+}
+.bricons-circle-yelp:before {
+  content: "\5a";
+}
+.bricons-circle-yelp-full:before {
+  content: "\30";
+}
+.bricons-circle-youtube:before {
+  content: "\31";
+}
+.bricons-circle-youtube-d:before {
+  content: "\32";
+}
+.bricons-facebook:before {
+  content: "\33";
+}
+.bricons-yelp-full:before {
+  content: "\34";
+}
+.bricons-youtube:before {
+  content: "\35";
+}
+.bricons-fb-messenger:before {
+  content: "\36";
+}
+.bricons-youtube-d:before {
+  content: "\37";
+}
+.bricons-google:before {
+  content: "\38";
+}
+.bricons-google-drive:before {
+  content: "\39";
+}
+.bricons-google-plus:before {
+  content: "\21";
+}
+.bricons-instagram:before {
+  content: "\23";
+}
+.bricons-linkedin:before {
+  content: "\24";
+}
+.bricons-twitter:before {
+  content: "\25";
+}
+.bricons-vimeo:before {
+  content: "\26";
+}
+.bricons-whatsapp:before {
+  content: "\27";
+}
+.bricons-yahoo:before {
+  content: "\28";
+}
+.bricons-yelp:before {
+  content: "\29";
+}
+.bricons-sq-facebook-1:before {
+  content: "\61";
+}
+.bricons-squircle-houzz:before {
+  content: "\6c";
+}
+.bricons-sq-houzz:before {
+  content: "\79";
+}
+.bricons-circle-houzz:before {
+  content: "\51";
+}
+.bricons-houzz:before {
+  content: "\22";
+}
+.bricons-sq-pinterest:before {
+  content: "\2a";
+}
+.bricons-squircle-pinterest:before {
+  content: "\2b";
+}
+.bricons-circle-pinterest:before {
+  content: "\2c";
+}
+.bricons-pinterest:before {
+  content: "\2d";
+}
