@@ -38,18 +38,18 @@ function cdswerx_child_enqueue_styles() {
         CDSWERX_CHILD_VERSION
     );
     
-    // CDSWerx Asset Management (will be automated in TE-5)
+    // CDSWerx Asset Management (automated intelligent loading)
     cdswerx_child_enqueue_assets();
 }
 add_action( 'wp_enqueue_scripts', 'cdswerx_child_enqueue_styles', 20 );
 
 /**
- * TE-5: Intelligent CDSWerx Asset Management
+ * Intelligent CDSWerx Asset Management
  * 
  * Enhanced asset loading with Elementor Pro detection, conditional CSS injection,
  * and performance optimization based on site configuration.
  * 
- * @since TE-5
+ * @since 1.0.0
  */
 function cdswerx_child_enqueue_assets() {
     $asset_base_url = get_stylesheet_directory_uri() . '/assets/css/';
@@ -68,6 +68,22 @@ function cdswerx_child_enqueue_assets() {
         'cdswerx-global-styles',
         $asset_base_url . 'cds-globalstyles.css',
         ['cdswerx-child-style'],
+        CDSWERX_CHILD_VERSION
+    );
+    
+    // CSS Migration: Plugin presentation styles moved to theme (WordPress compliance)
+    wp_enqueue_style(
+        'cdswerx-plugin-migration',
+        $asset_base_url . 'cdswerx-plugin-migration.css',
+        ['cdswerx-global-styles'],
+        CDSWERX_CHILD_VERSION
+    );
+    
+    // Complete CSS Migration: All presentation styles from plugin (Phase A completion)
+    wp_enqueue_style(
+        'cdswerx-presentation-migrated',
+        $asset_base_url . 'cdswerx-presentation-migrated.css',
+        ['cdswerx-plugin-migration'],
         CDSWERX_CHILD_VERSION
     );
     
@@ -99,11 +115,11 @@ function cdswerx_child_enqueue_assets() {
 }
 
 /**
- * TE-5: CDSWerx Asset Manager Class
+ * CDSWerx Asset Manager Class
  * 
- * Handles intelligent asset loading, Elementor detection, and performance optimization
+ * Handles intelligent asset loading based on Elementor status and site requirements.
  * 
- * @since TE-5
+ * @since 1.0.0
  */
 class CDSWerx_Asset_Manager {
     
@@ -351,7 +367,7 @@ function cdswerx_child_customize_register( $wp_customize ) {
         'description' => __( 'Options specific to CDSWerx Child Theme', 'cdswerx-theme-child' )
     ) );
     
-    // Asset Loading Preference (placeholder for TE-5 enhancement)
+    // Asset Loading Preference (intelligent performance optimization)
     $wp_customize->add_setting( 'cdswerx_asset_loading', array(
         'default' => 'auto',
         'sanitize_callback' => 'sanitize_text_field'

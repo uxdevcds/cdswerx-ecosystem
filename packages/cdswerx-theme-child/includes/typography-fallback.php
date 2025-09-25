@@ -2,7 +2,7 @@
 /**
  * CDSWerx Typography Fallback Integration
  * Auto-generated typography fallback system
- * Generated: 2025-09-24 22:04:44
+ * Generated: 2025-09-25 23:22:03
  */
 
 // Prevent direct access

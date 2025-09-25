@@ -1,5 +1,11 @@
 <?php
 
+// Prevent direct access
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+
 /**
  * The file that defines the core plugin class
  *
@@ -121,9 +127,10 @@ class Cdswerx
 
         /**
          * The class responsible for defining all actions that occur in the admin area.
+         * Updated to use new Admin Manager architecture.
          */
         require_once plugin_dir_path(dirname(__FILE__)) .
-            "admin/class/class-cdswerx-admin.php";
+            "includes/core/class-cdswerx-admin-manager.php";
 
         /**
          * The class responsible for defining extension-specific functionality.
@@ -167,6 +174,34 @@ class Cdswerx
             "includes/class-typography-css-reader.php";
         require_once plugin_dir_path(dirname(__FILE__)) .
             "includes/class-cdswerx-typography-sync.php";
+            
+        /**
+         * GitHub Update System - Phase A Implementation
+         */
+        require_once plugin_dir_path(dirname(__FILE__)) .
+            "includes/class-cdswerx-github-update-manager.php";
+            
+        /**
+         * Legacy Migration Completion - Phase A Final Task
+         */
+        require_once plugin_dir_path(dirname(__FILE__)) .
+            "includes/class-cdswerx-legacy-migration-completion.php";
+            
+        /**
+         * Phase B: User Experience Enhancement Classes
+         */
+        require_once plugin_dir_path(dirname(__FILE__)) .
+            "includes/class-cdswerx-admin-ux-improvements.php";
+        require_once plugin_dir_path(dirname(__FILE__)) .
+            "includes/class-cdswerx-performance-optimization.php";
+        require_once plugin_dir_path(dirname(__FILE__)) .
+            "includes/class-cdswerx-testing-qa-manager.php";
+            
+        /**
+         * Phase C: Documentation & Operations Excellence Classes
+         */
+        require_once plugin_dir_path(dirname(__FILE__)) .
+            "includes/class-cdswerx-operations-monitoring.php";
 
         $this->loader = new Cdswerx_Loader();
     }
@@ -200,14 +235,22 @@ class Cdswerx
      */
     private function define_admin_hooks()
     {
-        $plugin_admin = new Cdswerx_Admin(
+        $plugin_admin = new CDSWerx_Admin_Manager(
             $this->get_plugin_name(),
             $this->get_version(),
+            $this->loader
         );
         $plugin_extensions = new Cdswerx_Extensions(
             $this->get_plugin_name(),
             $this->get_version(),
         );
+
+        // Initialize Operations Monitoring
+        $operations_monitoring = new CDSWerx_Operations_Monitoring(
+            $this->get_plugin_name(),
+            $this->get_version()
+        );
+        $operations_monitoring->register_hooks();
 
         // Register the admin styles and scripts
         $this->loader->add_action(

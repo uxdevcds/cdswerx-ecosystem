@@ -1,4 +1,10 @@
-<?php return array(
+<?php
+
+// Prevent direct access
+if (!defined('ABSPATH')) {
+    exit;
+}
+
     'root' => array(
         'name' => 'elementor/hello-theme',
         'pretty_version' => 'dev-master',

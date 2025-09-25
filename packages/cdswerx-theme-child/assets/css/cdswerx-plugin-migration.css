@@ -1,0 +1,103 @@
+/*////////////////////////////////////////////////////////////////////////////////////////////*/
+/*////////////////////////////////////// CDS CSS ////////////////////////////////////////////*/
+/* MIGRATED FROM PLUGIN: Presentation styles moved from cdswerx-plugin to theme (WordPress compliance) */
+/* Plugin should only handle admin/functionality CSS, themes handle all presentation */
+/*////////////////////////////////////////////////////////////////////////////////////////////*/
+
+/*******************************************************/
+/* Additional Typography Formatting
+    /* Styles also apply to TinyMCE Formatting Styles*/
+/*******************************************************/
+
+/*SEO H1 Heading & Paragraph Formatting*/
+p:has(+ h1.hero-header),
+h1.hero-header,
+h1.hero-header+p,
+p:has(+ h2.hero-header),
+h2.hero-header,
+h2.hero-header+p,
+p:has(+ h3.hero-header),
+h3.hero-header,
+h3.hero-header+p,
+p:has(+ h4.hero-header),
+h4.hero-header,
+h4.hero-header+p {
+    display: inline;
+    /*forces h1 tag to display in same line as paragraph*/
+}
+
+h1.hero-header,
+h2.hero-header,
+h3.hero-header,
+h4.hero-header {
+    /*ensures h1 style takes same as paragraph*/
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
+    color: inherit !important;
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+}
+
+/* Display Heading Styles */
+.display-1 {
+    font-size: 4.5rem
+}
+
+.display-2 {
+    font-size: 3.5rem
+}
+
+.display-1,
+.display-2 {
+    font-weight: 300;
+    line-height: 1.2
+}
+
+/*Alternate Heading Styles*/
+
+.single-courses-sidebar h2,
+h2.sm {
+    font-size: 2em;
+    line-height: 1.2;
+}
+
+/*Header Font Weights*/
+.xbold,
+h1.xbold,
+h2.xbold,
+h3.xbold,
+h4.xbold,
+h5.xbold,
+h6.xbold,
+body.xbold,
+p.xbold {
+    font-weight: 800;
+}
+
+.xlight,
+h1.xlight,
+h2.xlight,
+h3.xlight,
+h4.xlight,
+h5.xlight,
+h6.xlight,
+body.xlight,
+p.xlight {
+    font-weight: 200;
+}
+
+.lightheader,
+h1.lightheader,
+h2.lightheader,
+h3.lightheader,
+h4.lightheader,
+h5.lightheader,
+h6.lightheader {
+    font-weight: 200;
+}
+
+/* TODO: Complete migration of remaining 900+ lines from plugin public CSS */
+/* TODO: Update plugin to remove presentation styles and keep only functionality CSS */
+/* TODO: Update theme functions.php to enqueue this new CSS file */

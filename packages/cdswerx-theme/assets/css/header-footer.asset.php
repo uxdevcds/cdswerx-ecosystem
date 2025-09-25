@@ -1,1 +1,7 @@
-<?php return array('dependencies' => array(), 'version' => '35eef2f211c36a776630');
+<?php
+
+// Prevent direct access
+if (!defined('ABSPATH')) {
+    exit;
+}
+
